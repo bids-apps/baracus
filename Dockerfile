@@ -58,6 +58,9 @@ ENV LC_ALL=C.UTF-8
 RUN pip install nibabel
 COPY . /code/
 RUN cd /code && ls && pip install -e .
-RUN wget unzip
+
+RUN apt-get install -y unzip
+RUN wget -qO models.zip https://www.dropbox.com/s/h0pyuyy0d4jmdvd/models.zip?dl=0 && \
+unzip models.zip && mv models /code/ && rm models.zip
 
 ENTRYPOINT ["run_brain_age_bids.py"]
