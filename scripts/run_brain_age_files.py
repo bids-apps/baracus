@@ -2,10 +2,10 @@
 
 import argparse
 from pkg_resources import resource_filename, Requirement
-from bauto.predict import predict_brain_age_single_subject
+from baracus.predict import predict_brain_age_single_subject
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='BAuto: automatic prediction of Brain Age. Files mode. '
+    parser = argparse.ArgumentParser(description='BARACUS: Brain-Age Regression Analysis and Computation Utility Software. Files mode. '
                                                  'You specify lh/rh thickness/area + aseg file (with '
                                                  '--lh_thickness_file...). Surface files need to be sampled to '
                                                  'fsaverage4 space, aseg files extracted via asegstats2table. Only '
@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    model_dir = resource_filename(Requirement.parse("bauto"), 'models')
+    model_dir = resource_filename(Requirement.parse("baracus"), 'models')
 
     if args.participant_label:
         subject = args.participant_label

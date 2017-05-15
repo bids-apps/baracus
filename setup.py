@@ -3,19 +3,19 @@
 # which borrowed some portions from https://github.com/mwaskom/lyman/blob/master/setup.py
 
 
-descr = """BAauto: automatic prediction of Brain Age"""
+descr = """BARACUS: Brain-Age Regression Analysis and Computation Utility Software"""
 
 import os
 from setuptools import setup, find_packages
 import glob
-from bauto import __version__
+from baracus import __version__
 
-DISTNAME = "bauto"
+DISTNAME = "baracus"
 DESCRIPTION = descr
 MAINTAINER = 'Franz Liem'
 MAINTAINER_EMAIL = 'franziskus.liem@uzh.ch'
 LICENSE = 'Apache2.0'
-DOWNLOAD_URL = 'https://github.com/fliem/bauto'
+DOWNLOAD_URL = 'https://github.com/fliem/baracus'
 VERSION = __version__
 
 PACKAGES = find_packages()

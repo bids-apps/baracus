@@ -4,7 +4,7 @@ import nibabel as nb
 import pandas as pd
 import pickle
 from collections import OrderedDict
-import bauto
+import baracus
 
 
 def _vectorize_fs_surf(in_data_file):
@@ -76,7 +76,7 @@ def predict_brain_age(X, models, subject_label=""):
         y_predicted[m] = predict_from_model(X[m], models[m])
         d = OrderedDict([
             ("subject_id", subject_label), ("model", models["model_name"]),
-            ("modality", m), ("predicted_age", y_predicted[m]), ("bauto_version", bauto.__version__)])
+            ("modality", m), ("predicted_age", y_predicted[m]), ("baracus_version", baracus.__version__)])
         df = df.append(pd.DataFrame(d))
 
     # MULTI MODAL
@@ -85,11 +85,13 @@ def predict_brain_age(X, models, subject_label=""):
         y_stacked.append(y_predicted[m][0])
 
     m = "fs"
+    out_modality = "stacked-anatomy"
+
     X[m] = np.atleast_2d(y_stacked)
     y_predicted[m] = predict_from_model(X[m], models[m])
     d = OrderedDict([
         ("subject_id", subject_label), ("model", models["model_name"]),
-        ("modality", m), ("predicted_age", y_predicted[m]), ("bauto_version", bauto.__version__)])
+        ("modality", out_modality), ("predicted_age", y_predicted[m]), ("baracus_version", baracus.__version__)])
     df = df.append(pd.DataFrame(d))
 
     return df
@@ -111,4 +113,4 @@ def predict_brain_age_single_subject(out_dir, lh_thickness_file, rh_thickness_fi
         subject_str = ""
     out_file = os.path.join(subject_dir, subject_str + "predicted_age.tsv")
     df.to_csv(out_file, sep="\t", index=False)
-    print("Predicted and saved %s %s" % (subject_label, out_file))
+    print("FINISHED. Predicted and saved %s %s" % (subject_label, out_file))

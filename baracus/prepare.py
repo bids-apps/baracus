@@ -66,5 +66,5 @@ def run_prepare_all(freesurfer_dir, out_dir, subjects_to_analyze):
         print("preparing %s" % subject)
         out_files[subject] = prepare_fs_data(freesurfer_dir, out_dir, "sub-" + subject)
 
-    print("FINISHED prepared %s" % " ".join(subjects_to_analyze))
+    print("FINISHED. Prepared %s" % " ".join(subjects_to_analyze))
     return out_files

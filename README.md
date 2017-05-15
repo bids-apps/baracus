@@ -1,4 +1,4 @@
-# [WIP] BAuto: automatic prediction of Brain Age
+# [WIP] BARACUS: Brain-Age Regression Analysis and Computation Utility Software
 
 This package predicts brain age, based on data from Freesurfer 5.3.
 It combines data from cortical thickness, cortical surface area, and
@@ -39,14 +39,14 @@ Participants
     docker run -ti --rm \
     -v /project/freesurfer/:/data/in \
     -v /project/out:/data/out \
-    fliem/bauto /data/in /data/out participant
+    fliem/baracus /data/in /data/out participant
 
 Group
 
     docker run -ti --rm \
     -v /project/freesurfer/:/data/in \
     -v /project/out:/data/out \
-    fliem/bauto /data/in /data/out group
+    fliem/baracus /data/in /data/out group
 
 ### Usage
 
@@ -86,7 +86,7 @@ Group
     -v /project/data/:/data/in \
     -v /project/out:/data/out \
     --entrypoint=run_brain_age_files.py \
-    fliem/bauto /data/out \
+    fliem/baracus /data/out \
     --lh_thickness_file /data/in/s01/lh.thickness.mgh \
     --rh_thickness_file /data/in/s01/rh.thickness.mgh \
     --lh_area_file /data/in/s01/lh.area.mgh \

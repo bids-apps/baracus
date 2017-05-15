@@ -5,11 +5,11 @@ import os
 from glob import glob
 import pandas as pd
 from pkg_resources import resource_filename, Requirement
-from bauto.predict import predict_brain_age_single_subject
-from bauto.prepare import run_prepare_all
+from baracus.predict import predict_brain_age_single_subject
+from baracus.prepare import run_prepare_all
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='BAuto: automatic prediction of Brain Age. BIDS mode. '
+    parser = argparse.ArgumentParser(description='BARACUS: Brain-Age Regression Analysis and Computation Utility Software. BIDS mode. '
                                                  'You specify a BIDS-formatted freesurfer folder as input. All data '
                                                  'is extracted automatiacally from that folder. ')
     parser.add_argument('freesurfer_dir', help='Folder with freesurfer subjects formatted according to BIDS '
@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    model_dir = resource_filename(Requirement.parse("bauto"), 'models')
+    model_dir = resource_filename(Requirement.parse("baracus"), 'models')
     if args.participant_label:
         subjects_to_analyze = args.participant_label
     else:
