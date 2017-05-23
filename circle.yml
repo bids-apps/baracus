@@ -9,6 +9,7 @@ machine:
 dependencies:
   cache_directories:
     - "~/docker"
+    - "~/data"
 
   override:
     - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
@@ -16,12 +17,13 @@ dependencies:
     - docker build -t fliem/${CIRCLE_PROJECT_REPONAME,,} . :
         timeout: 21600
     - mkdir -p ~/docker; docker save "fliem/${CIRCLE_PROJECT_REPONAME,,}" > ~/docker/image.tar
+    - if [[ ! -d ~/data/ds114_test1_freesurfer ]]; then wget -c -O ${HOME}/ds114_test1_freesurfer.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882adf3b83f6901f564da49" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test1_freesurfer.tar -C ${HOME}/data; fi
+    - if [[ ! -d ~/data/ds114_test2_freesurfer ]]; then wget -c -O ${HOME}/ds114_test2_freesurfer.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882b0e3b83f6901fb64da18" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test2_freesurfer.tar -C ${HOME}/data; fi
 
 test:
   override:
     - docker run -ti --rm fliem/${CIRCLE_PROJECT_REPONAME,,} -h
-#     - docker run --rm -ti -v ${HOME}/outputs:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} python /code/lhab_pipelines/scripts/nii_conversion/phantom_tests/run_nii_conversion_phantom.py /code/lhab_pipelines/scripts/nii_conversion/phantom_tests/01_RAW /data/out participant --ds_version phantomas
-
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in ${HOME}/outputs:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
 
 deployment:
   hub:
