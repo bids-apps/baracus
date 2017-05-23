@@ -17,9 +17,9 @@ dependencies:
         timeout: 21600
     - mkdir -p ~/docker; docker save "fliem/${CIRCLE_PROJECT_REPONAME,,}" > ~/docker/image.tar
 
-# test:
-#   override:
-#     - docker run -ti --rm fliem/${CIRCLE_PROJECT_REPONAME,,} nosetests -v /code/lhab_pipelines/
+test:
+  override:
+    - docker run -ti --rm fliem/${CIRCLE_PROJECT_REPONAME,,} -h
 #     - docker run --rm -ti -v ${HOME}/outputs:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} python /code/lhab_pipelines/scripts/nii_conversion/phantom_tests/run_nii_conversion_phantom.py /code/lhab_pipelines/scripts/nii_conversion/phantom_tests/01_RAW /data/out participant --ds_version phantomas
 
 
