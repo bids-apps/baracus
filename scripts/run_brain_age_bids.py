@@ -7,6 +7,7 @@ import pandas as pd
 from pkg_resources import resource_filename, Requirement
 from baracus.predict import predict_brain_age_single_subject
 from baracus.prepare import run_prepare_all
+import re
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='BARACUS: Brain-Age Regression Analysis and Computation Utility Software. BIDS mode. '
@@ -33,11 +34,20 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     model_dir = resource_filename(Requirement.parse("baracus"), 'models')
+
     if args.participant_label:
-        subjects_to_analyze = args.participant_label
+        subject_dirs = [os.path.basename(s) for s in sorted(glob(os.path.join(args.freesurfer_dir,
+                                                                      "sub-" + args.participant_label + "*")))]
     else:
-        subject_dirs = glob(os.path.join(args.freesurfer_dir, "sub-*"))
-        subjects_to_analyze = [subject_dir.split("-")[-1] for subject_dir in subject_dirs]
+        subject_dirs = [os.path.basename(s) for s in sorted(glob(os.path.join(args.freesurfer_dir, "sub-*")))]
+
+    # if longitudinal subjects, only take crossectional ses subjects and skip long and base subjects
+    if list(filter(re.compile(r".long.").search, subject_dirs)):  # longitudinal subjects
+        ses_subjects = list(filter(re.compile(r"_ses-").search, subject_dirs))
+        subjects_to_analyze = [s for s in ses_subjects if not ".long." in s]
+    else:
+        subjects_to_analyze = subject_dirs
+
 
     if args.analysis_level == "participant":
         data_files = run_prepare_all(args.freesurfer_dir, args.out_dir, subjects_to_analyze)
@@ -46,14 +56,14 @@ if __name__ == "__main__":
             d["out_dir"] = args.out_dir
             d["model_dir"] = model_dir
             d["model"] = args.model
-            d["subject_label"] = "sub-" + subject
+            d["subject_label"] = subject
             predict_brain_age_single_subject(**d)
 
     elif args.analysis_level == "group":
         print("Creating group table...")
         df = pd.DataFrame([])
         for subject in subjects_to_analyze:
-            in_file = os.path.join(args.out_dir, "sub-" + subject, "sub-" + subject + "_predicted_age.tsv")
+            in_file = os.path.join(args.out_dir, subject, subject + "_predicted_age.tsv")
             df = df.append(pd.read_csv(in_file, sep="\t"))
 
         group_out_dir = os.path.join(args.out_dir, "00_group")
