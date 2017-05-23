@@ -1,0 +1,32 @@
+general:
+  artifacts:
+    - "~/outputs"
+
+machine:
+  services:
+    - docker #don't use 1.10 - caching is broken
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+
+  override:
+    - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+    - git describe --tags > version
+    - docker build -t fliem/${CIRCLE_PROJECT_REPONAME,,} . :
+        timeout: 21600
+    - mkdir -p ~/docker; docker save "fliem/${CIRCLE_PROJECT_REPONAME,,}" > ~/docker/image.tar
+
+# test:
+#   override:
+#     - docker run -ti --rm fliem/${CIRCLE_PROJECT_REPONAME,,} nosetests -v /code/lhab_pipelines/
+#     - docker run --rm -ti -v ${HOME}/outputs:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} python /code/lhab_pipelines/scripts/nii_conversion/phantom_tests/run_nii_conversion_phantom.py /code/lhab_pipelines/scripts/nii_conversion/phantom_tests/01_RAW /data/out participant --ds_version phantomas
+
+
+deployment:
+  hub:
+    owner: fliem
+    tag: /.*/
+    commands:
+      - if [[ -n "$DOCKER_PASS" ]]; then docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS && docker tag fliem/${CIRCLE_PROJECT_REPONAME,,} fliem/${CIRCLE_PROJECT_REPONAME,,}:$CIRCLE_TAG && docker push fliem/${CIRCLE_PROJECT_REPONAME,,}:$CIRCLE_TAG; fi :
+          timeout: 21600
