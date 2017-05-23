@@ -34,10 +34,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     model_dir = resource_filename(Requirement.parse("baracus"), 'models')
-
+    subject_dirs = []
     if args.participant_label:
-        subject_dirs = [os.path.basename(s) for s in sorted(glob(os.path.join(args.freesurfer_dir,
-                                                                      "sub-" + args.participant_label + "*")))]
+        for pl in args.participant_label:
+            subject_dirs += [os.path.basename(s) for s in sorted(glob(os.path.join(args.freesurfer_dir,
+                                                                      "sub-" + pl + "*")))]
     else:
         subject_dirs = [os.path.basename(s) for s in sorted(glob(os.path.join(args.freesurfer_dir, "sub-*")))]
 
