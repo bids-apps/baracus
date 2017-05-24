@@ -25,10 +25,12 @@ test:
     - docker run -ti --rm fliem/${CIRCLE_PROJECT_REPONAME,,} -h
     # ds114_test1
     - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
-    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group && cat ${HOME}/outputs/ds114_test1/00_group/group_predicted_age.tsv
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
+    - cat ${HOME}/outputs/ds114_test1/00_group/group_predicted_age.tsv
     # ds114_test2
     - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
-    - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group && cat ${HOME}/outputs/ds114_test2/00_group/group_predicted_age.tsv
+    - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
+    - cat ${HOME}/outputs/ds114_test2/00_group/group_predicted_age.tsv
 
 deployment:
   hub:
