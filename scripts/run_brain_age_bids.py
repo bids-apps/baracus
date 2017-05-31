@@ -27,7 +27,7 @@ if __name__ == "__main__":
                                                     'provided all subjects should be analyzed. Multiple '
                                                     'participants can be specified with a space separated list.',
                         nargs="+")
-    parser.add_argument('--models', choices=["Liem2016__OCI_norm"], default="Liem2016__OCI_norm", help='', nargs="+")
+    parser.add_argument('--models', choices=["Liem2016__OCI_norm"], default=["Liem2016__OCI_norm"], help='', nargs="+")
 
 
 
