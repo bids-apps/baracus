@@ -27,7 +27,7 @@ if __name__ == "__main__":
                                                     'provided all subjects should be analyzed. Multiple '
                                                     'participants can be specified with a space separated list.',
                         nargs="+")
-    parser.add_argument('--model', choices=["Liem2016__OCI_norm"], default="Liem2016__OCI_norm", help='')
+    parser.add_argument('--models', choices=["Liem2016__OCI_norm"], default="Liem2016__OCI_norm", help='', nargs="+")
 
 
 
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         for subject, d in data_files.items():
             d["out_dir"] = args.out_dir
             d["model_dir"] = model_dir
-            d["model"] = args.model
+            d["models"] = args.models
             d["subject_label"] = subject
             predict_brain_age_single_subject(**d)
 

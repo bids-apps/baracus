@@ -98,11 +98,16 @@ def predict_brain_age(X, models, subject_label=""):
 
 
 def predict_brain_age_single_subject(out_dir, lh_thickness_file, rh_thickness_file, lh_area_file, rh_area_file,
-                                     aseg_file, model_dir, model="Liem2016__OCI_norm", subject_label=""):
+                                     aseg_file, model_dir, models=["Liem2016__OCI_norm"], subject_label=""):
     X = get_data(lh_thickness_file, rh_thickness_file, lh_area_file, rh_area_file, aseg_file)
-    models = get_models(model_dir, model=model)
 
-    df = predict_brain_age(X, models, subject_label=subject_label)
+    df = pd.DataFrame([])
+
+    for ba_model in models:
+        fitted_models = get_models(model_dir, model=ba_model)
+
+        df_ = predict_brain_age(X, fitted_models, subject_label=subject_label)
+        df = df.append(df_)
 
     subject_dir = os.path.join(out_dir, subject_label)
     if not os.path.isdir(subject_dir):
