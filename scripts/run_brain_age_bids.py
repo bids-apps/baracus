@@ -7,6 +7,7 @@ import pandas as pd
 from pkg_resources import resource_filename, Requirement
 from baracus.predict import predict_brain_age_single_subject
 from baracus.prepare import run_prepare_all
+from baracus import models_list
 import re
 
 if __name__ == "__main__":
@@ -27,7 +28,8 @@ if __name__ == "__main__":
                                                     'provided all subjects should be analyzed. Multiple '
                                                     'participants can be specified with a space separated list.',
                         nargs="+")
-    parser.add_argument('--models', choices=["Liem2016__OCI_norm"], default=["Liem2016__OCI_norm"], help='', nargs="+")
+    parser.add_argument('--models', choices=models_list, default=["Liem2016__OCI_norm"], help='',
+                        nargs="+")
 
 
 

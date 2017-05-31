@@ -3,6 +3,7 @@
 import argparse
 from pkg_resources import resource_filename, Requirement
 from baracus.predict import predict_brain_age_single_subject
+from baracus import models_list
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='BARACUS: Brain-Age Regression Analysis and Computation Utility Software. Files mode. '
@@ -12,7 +13,7 @@ if __name__ == "__main__":
                                                  'one subject can be specified at a time.')
     parser.add_argument('out_dir', help='Results are put here.')
     parser.add_argument('--participant_label', help='will be written into output files and can be omitted')
-    parser.add_argument('--models', choices=["Liem2016__OCI_norm"], default="Liem2016__OCI_norm", help='', nargs="+")
+    parser.add_argument('--models', choices=models_list, default="Liem2016__OCI_norm", help='', nargs="+")
 
     parser.add_argument('--lh_thickness_file', required=True, help='')
     parser.add_argument('--rh_thickness_file', required=True, help='')

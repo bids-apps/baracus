@@ -60,7 +60,7 @@ COPY . /code/
 RUN cd /code && ls && pip install -e .
 
 RUN apt-get install -y unzip
-RUN wget -qO models.zip https://www.dropbox.com/s/h0pyuyy0d4jmdvd/models.zip?dl=0 && \
+RUN wget -qO models.zip https://www.dropbox.com/s/5xbqw8i2e7x0g02/models.zip?dl=0 && \
 unzip models.zip && mv models /code/ && rm models.zip
 
 ENTRYPOINT ["run_brain_age_bids.py"]
