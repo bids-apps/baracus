@@ -2,10 +2,10 @@
 
 This package predicts brain age, based on data from Freesurfer 5.3.
 It combines data from cortical thickness, cortical surface area, and
-subcortical information (see Liem et al., 2016).
+subcortical information (see Liem et al., 2017).
 
 
-Liem et al. (2016). Predicting brain-age
+Liem et al. (2017). Predicting brain-age
 from multimodal imaging data captures cognitive impairment.
 Neuroimage, 148:179–188,
 [doi: 10.1016/j.neuroimage.2016.11.005](http://www.sciencedirect.com/science/article/pii/S1053811916306103).
@@ -15,8 +15,15 @@ Neuroimage, 148:179–188,
 ## Models
 
 **Liem2016__OCI_norm**: Model trained on subjects that have no
-objective cognitive impairment (OCI) (*OCI norm* in Liem et al., 2016).
+objective cognitive impairment (OCI) (*OCI norm* in Liem et al., 2017).
 Sample: N = 1166, 566f/600m, age: M = 59.1, SD = 15.2, 20-80y
+
+**Liem2016__full_2samp_training**: Model trained on subjects that have no
+objective cognitive impairment (OCI) (*full LIFE 2sample training* in Liem et al., 2017).
+Sample: N = 2377, 1133f/1244m, age: M=58.4, SD=15.4, 18-83y;
+containing data from the LIFE and NKI studies.
+
+
 
 
 ## Modes
