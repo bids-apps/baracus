@@ -27,6 +27,10 @@ test:
     - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
     - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
     - cat ${HOME}/outputs/ds114_test1/00_group/group_predicted_age.tsv
+    # ## test models
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1_models:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant --models Liem2016__OCI_norm, Liem2016__full_2samp_training
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1_models:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
+    - cat ${HOME}/outputs/ds114_test1_models/00_group/group_predicted_age.tsv
     # ds114_test2
     - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
     - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
