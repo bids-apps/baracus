@@ -59,12 +59,12 @@ Group
 
     usage: run_brain_age_bids.py [-h]
                                  [--participant_label PARTICIPANT_LABEL [PARTICIPANT_LABEL ...]]
-                                 [--model {Liem2016__OCI_norm}]
+                                 [--models {Liem2016__OCI_norm,Liem2016__full_2samp_training} [{Liem2016__OCI_norm,Liem2016__full_2samp_training} ...]]
                                  freesurfer_dir out_dir {participant,group}
 
-    BAuto: automatic prediction of Brain Age. BIDS mode. You specify a BIDS-
-    formatted freesurfer folder as input. All data is extracted automatiacally
-    from that folder.
+    BARACUS: Brain-Age Regression Analysis and Computation Utility Software. BIDS
+    mode. You specify a BIDS-formatted freesurfer folder as input. All data is
+    extracted automatiacally from that folder.
 
     positional arguments:
       freesurfer_dir        Folder with freesurfer subjects formatted according to
@@ -83,7 +83,7 @@ Group
                             parameter is not provided all subjects should be
                             analyzed. Multiple participants can be specified with
                             a space separated list.
-      --model {Liem2016__OCI_norm}
+      --models {Liem2016__OCI_norm,Liem2016__full_2samp_training} [{Liem2016__OCI_norm,Liem2016__full_2samp_training} ...]
 
 
 
@@ -102,19 +102,19 @@ Group
 
 
 ### Usage
-    usage: run_brain_age_files.py [-h] --mode {bids,files}
-                                  [--participant_label PARTICIPANT_LABEL]
-                                  [--model {Liem2016__OCI_norm}]
+    usage: run_brain_age_files.py [-h] [--participant_label PARTICIPANT_LABEL]
+                                  [--models {Liem2016__OCI_norm,Liem2016__full_2samp_training} [{Liem2016__OCI_norm,Liem2016__full_2samp_training} ...]]
                                   --lh_thickness_file LH_THICKNESS_FILE
                                   --rh_thickness_file RH_THICKNESS_FILE
                                   --lh_area_file LH_AREA_FILE --rh_area_file
                                   RH_AREA_FILE --aseg_file ASEG_FILE
                                   out_dir
 
-    BAuto: automatic prediction of Brain Age. Files mode. You specify lh/rh
-    thickness/area + aseg file (with --lh_thickness_file...). Surface files need
-    to be sampled to fsaverage4 space, aseg files extracted via asegstats2table.
-    Only one subject can be specified at a time.
+    BARACUS: Brain-Age Regression Analysis and Computation Utility Software. Files
+    mode. You specify lh/rh thickness/area + aseg file (with
+    --lh_thickness_file...). Surface files need to be sampled to fsaverage4 space,
+    aseg files extracted via asegstats2table. Only one subject can be specified at
+    a time.
 
     positional arguments:
       out_dir               Results are put here.
@@ -123,7 +123,7 @@ Group
       -h, --help            show this help message and exit
       --participant_label PARTICIPANT_LABEL
                             will be written into output files and can be omitted
-      --model {Liem2016__OCI_norm}
+      --models {Liem2016__OCI_norm,Liem2016__full_2samp_training} [{Liem2016__OCI_norm,Liem2016__full_2samp_training} ...]
       --lh_thickness_file LH_THICKNESS_FILE
       --rh_thickness_file RH_THICKNESS_FILE
       --lh_area_file LH_AREA_FILE
