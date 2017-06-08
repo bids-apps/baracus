@@ -1,4 +1,4 @@
-# [WIP] BARACUS: Brain-Age Regression Analysis and Computation Utility Software
+# BARACUS: Brain-Age Regression Analysis and Computation Utility Software
 
 This package predicts brain age, based on data from Freesurfer 5.3.
 It combines data from cortical thickness, cortical surface area, and
@@ -11,9 +11,14 @@ Neuroimage, 148:179–188,
 [doi: 10.1016/j.neuroimage.2016.11.005](http://www.sciencedirect.com/science/article/pii/S1053811916306103).
 [\[preprint\]](http://www.biorxiv.org/content/early/2016/11/07/085506)
 
+## Requirements
+Before age prediction can be performed, [FreeSurfer's](http://freesurfer.net)
+`recon-all` command has to be run with Freesurfer version 5.3.
+Freesurfer data has to be in [BIDS format](http://bids.neuroimaging.io),
+i.e. subject folders should be named
+*sub-<subject_label>*, (e.g., sub-01, sub-02...).
 
 ## Models
-
 **Liem2016__OCI_norm**: Model trained on subjects that have no
 objective cognitive impairment (OCI) (*OCI norm* in Liem et al., 2017).
 Sample: N = 1166, 566f/600m, age: M = 59.1, SD = 15.2, 20-80y
@@ -46,14 +51,14 @@ Participants
     docker run -ti --rm \
     -v /project/freesurfer/:/data/in \
     -v /project/out:/data/out \
-    fliem/baracus /data/in /data/out participant
+    bids/baracus /data/in /data/out participant
 
 Group
 
     docker run -ti --rm \
     -v /project/freesurfer/:/data/in \
     -v /project/out:/data/out \
-    fliem/baracus /data/in /data/out group
+    bids/baracus /data/in /data/out group
 
 ### Usage
 
@@ -93,7 +98,7 @@ Group
     -v /project/data/:/data/in \
     -v /project/out:/data/out \
     --entrypoint=run_brain_age_files.py \
-    fliem/baracus /data/out \
+    bids/baracus /data/out \
     --lh_thickness_file /data/in/s01/lh.thickness.mgh \
     --rh_thickness_file /data/in/s01/rh.thickness.mgh \
     --lh_area_file /data/in/s01/lh.area.mgh \
