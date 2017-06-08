@@ -19,7 +19,6 @@ i.e. subject folders should be named
 *sub-<subject_label>*, (e.g., sub-01, sub-02...).
 
 ## Models
-
 **Liem2016__OCI_norm**: Model trained on subjects that have no
 objective cognitive impairment (OCI) (*OCI norm* in Liem et al., 2017).
 Sample: N = 1166, 566f/600m, age: M = 59.1, SD = 15.2, 20-80y
