@@ -16,24 +16,24 @@ dependencies:
     - git describe --tags > version
     - docker build -t bids/${CIRCLE_PROJECT_REPONAME,,} . :
         timeout: 21600
-    - mkdir -p ~/docker; docker save "fliem/${CIRCLE_PROJECT_REPONAME,,}" > ~/docker/image.tar
+    - mkdir -p ~/docker; docker save "bids/${CIRCLE_PROJECT_REPONAME,,}" > ~/docker/image.tar
     - if [[ ! -d ~/data/ds114_test1_freesurfer ]]; then wget -c -O ${HOME}/ds114_test1_freesurfer.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882adf3b83f6901f564da49" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test1_freesurfer.tar -C ${HOME}/data; fi
     - if [[ ! -d ~/data/ds114_test2_freesurfer ]]; then wget -c -O ${HOME}/ds114_test2_freesurfer.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882b0e3b83f6901fb64da18" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test2_freesurfer.tar -C ${HOME}/data; fi
 
 test:
   override:
-    - docker run -ti --rm fliem/${CIRCLE_PROJECT_REPONAME,,} -h
+    - docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME,,} -h
     # ds114_test1
-    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
-    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
     - cat ${HOME}/outputs/ds114_test1/00_group/group_predicted_age.tsv
     # ## test models
-    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1_models:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant --models Liem2016__OCI_norm Liem2016__full_2samp_training
-    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1_models:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1_models:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant --models Liem2016__OCI_norm Liem2016__full_2samp_training
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1_models:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
     - cat ${HOME}/outputs/ds114_test1_models/00_group/group_predicted_age.tsv
     # ds114_test2
-    - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
-    - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out fliem/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
+    - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
+    - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
     - cat ${HOME}/outputs/ds114_test2/00_group/group_predicted_age.tsv
 
 deployment:
