@@ -1,6 +1,7 @@
 # BARACUS: Brain-Age Regression Analysis and Computation Utility Software
 
-This package predicts brain age, based on data from Freesurfer 5.3.
+This [BIDS App](http://bids-apps.neuroimaging.io/) predicts brain age,
+based on data from Freesurfer 5.3.
 It combines data from cortical thickness, cortical surface area, and
 subcortical information (see Liem et al., 2017).
 
@@ -47,14 +48,22 @@ aseg files extracted via asegstats2table.
 
 ## BIDS mode
 ### Example
-Participants
+#### Introduction
+These examples demonstrate how to run the `bids/baracus` docker container.
+For a brief introduction how to run BIDS Apps see
+[this site](http://bids-apps.neuroimaging.io/tutorial/).
+In the examples `project/freesurfer` and `/project/out` are directories
+on your hard drive, which are mapped into the docker container directories
+`/data/in` and `/data/out`, respectively, via the `-v` flag.
+
+#### Participants
 
     docker run -ti --rm \
     -v /project/freesurfer/:/data/in \
     -v /project/out:/data/out \
     bids/baracus /data/in /data/out participant
 
-Group
+#### Group
 
     docker run -ti --rm \
     -v /project/freesurfer/:/data/in \
