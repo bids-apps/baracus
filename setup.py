@@ -15,7 +15,7 @@ DESCRIPTION = descr
 MAINTAINER = 'Franz Liem'
 MAINTAINER_EMAIL = 'franziskus.liem@uzh.ch'
 LICENSE = 'Apache2.0'
-DOWNLOAD_URL = 'https://github.com/fliem/baracus'
+DOWNLOAD_URL = 'https://github.com/bids-apps/baracus'
 VERSION = __version__
 
 PACKAGES = find_packages()

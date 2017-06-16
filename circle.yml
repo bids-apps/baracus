@@ -24,9 +24,8 @@ test:
   override:
     - docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME,,} -h
     - docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME,,} -v
-    - docker run -ti --rm --entrypoint=run_brain_age_files.py bids/${CIRCLE_PROJECT_REPONAME,,} -h
-    - docker run -ti --rm --entrypoint=run_brain_age_files.py bids/${CIRCLE_PROJECT_REPONAME,,} -v
-    
+    - docker run --rm -ti --entrypoint=run_brain_age_files.py bids/baracus -h
+    - docker run --rm -ti --entrypoint=run_brain_age_files.py bids/baracus -v
     # ds114_test1
     - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
     - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group

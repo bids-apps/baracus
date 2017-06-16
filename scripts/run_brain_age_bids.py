@@ -7,12 +7,10 @@ import pandas as pd
 from pkg_resources import resource_filename, Requirement
 from baracus.predict import predict_brain_age_single_subject
 from baracus.prepare import run_prepare_all
-from baracus import models_list
+from baracus import models_list, __version__
 import re
 
 if __name__ == "__main__":
-    __version__ = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'version')).read()
-
     parser = argparse.ArgumentParser(description='BARACUS: Brain-Age Regression Analysis and Computation Utility Software. BIDS mode. '
                                                  'You specify a BIDS-formatted freesurfer folder as input. All data '
                                                  'is extracted automatiacally from that folder. ')
@@ -33,8 +31,7 @@ if __name__ == "__main__":
     parser.add_argument('--models', choices=models_list, default=["Liem2016__OCI_norm"], help='',
                         nargs="+")
     parser.add_argument('-v', '--version', action='version',
-                        version='BIDS-App example version {}'.format(__version__))
-
+                        version='BARACUS version {}'.format(__version__))
 
     args = parser.parse_args()
 
