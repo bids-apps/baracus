@@ -45,7 +45,6 @@ aseg files extracted via asegstats2table.
 
 
 
-
 ## BIDS mode
 ### Example
 #### Introduction
