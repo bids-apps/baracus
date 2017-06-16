@@ -36,5 +36,5 @@ if __name__ == "__main__":
                                      rh_area_file=args.rh_area_file,
                                      aseg_file=args.aseg_file,
                                      model_dir=model_dir,
-                                     models=args.model,
+                                     models=args.models,
                                      subject_label=subject)
