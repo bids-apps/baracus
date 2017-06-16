@@ -6,6 +6,7 @@ with open(os.path.join(dir_path, "../version")) as fi:
 models_list =  ["Liem2016__OCI_norm", "Liem2016__full_2samp_training"]
 
 __changes__ = """
+* 0.9.3: fix tagging issue
 * 0.9.2: fixed typo, -v flag
 
 """
