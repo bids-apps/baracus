@@ -1,11 +1,13 @@
 #! /usr/bin/env python
-
+import os
 import argparse
 from pkg_resources import resource_filename, Requirement
 from baracus.predict import predict_brain_age_single_subject
 from baracus import models_list
 
 if __name__ == "__main__":
+    __version__ = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'version')).read()
+
     parser = argparse.ArgumentParser(description='BARACUS: Brain-Age Regression Analysis and Computation Utility Software. Files mode. '
                                                  'You specify lh/rh thickness/area + aseg file (with '
                                                  '--lh_thickness_file...). Surface files need to be sampled to '
@@ -20,6 +22,8 @@ if __name__ == "__main__":
     parser.add_argument('--lh_area_file', required=True, help='')
     parser.add_argument('--rh_area_file', required=True, help='')
     parser.add_argument('--aseg_file', required=True, help='')
+    parser.add_argument('-v', '--version', action='version',
+                        version='BIDS-App example version {}'.format(__version__))
 
     args = parser.parse_args()
 

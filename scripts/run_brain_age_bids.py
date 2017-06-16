@@ -11,6 +11,8 @@ from baracus import models_list
 import re
 
 if __name__ == "__main__":
+    __version__ = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'version')).read()
+
     parser = argparse.ArgumentParser(description='BARACUS: Brain-Age Regression Analysis and Computation Utility Software. BIDS mode. '
                                                  'You specify a BIDS-formatted freesurfer folder as input. All data '
                                                  'is extracted automatiacally from that folder. ')
@@ -30,7 +32,8 @@ if __name__ == "__main__":
                         nargs="+")
     parser.add_argument('--models', choices=models_list, default=["Liem2016__OCI_norm"], help='',
                         nargs="+")
-
+    parser.add_argument('-v', '--version', action='version',
+                        version='BIDS-App example version {}'.format(__version__))
 
 
     args = parser.parse_args()
