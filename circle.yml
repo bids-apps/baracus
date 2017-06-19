@@ -34,6 +34,9 @@ test:
     - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1_models:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant --models Liem2016__OCI_norm Liem2016__full_2samp_training
     - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1_models:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
     - cat ${HOME}/outputs/ds114_test1_models/00_group/group_predicted_age.tsv
+    # test file mode
+    - docker run --rm -ti -v ${HOME}/outputs/ds114_test1/sub-01/data/:/data/in -v ${HOME}/outputs/ds114_test1_file_mode:/data/out --entrypoint=run_brain_age_files.py bids/baracus /data/out --lh_thickness_file /data/in/s01/lh.thickness.mgh --rh_thickness_file /data/in/s01/rh.thickness.mgh --lh_area_file /data/in/s01/lh.area.mgh --rh_area_file /data/in/s01/rh.area.mgh --aseg_file /data/in/s01/aseg
+
     # ds114_test2
     - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
     - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
