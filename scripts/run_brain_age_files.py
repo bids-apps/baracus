@@ -13,8 +13,8 @@ if __name__ == "__main__":
                                                  'one subject can be specified at a time.')
     parser.add_argument('out_dir', help='Results are put here.')
     parser.add_argument('--participant_label', help='will be written into output files and can be omitted')
-    parser.add_argument('--models', choices=models_list, default="Liem2016__OCI_norm", help='', nargs="+")
-
+    parser.add_argument('--models', choices=models_list, default=["Liem2016__OCI_norm"], help='',
+                        nargs="+")
     parser.add_argument('--lh_thickness_file', required=True, help='')
     parser.add_argument('--rh_thickness_file', required=True, help='')
     parser.add_argument('--lh_area_file', required=True, help='')
