@@ -23,6 +23,19 @@ Freesurfer data has to be in [BIDS format](http://bids.neuroimaging.io),
 i.e. subject folders should be named
 *sub-<subject_label>*, (e.g., sub-01, sub-02...).
 
+**Important:** The data has to be preprocessed with
+Freesurfer's 5.3.0 installation, not the 5.3.0-HCP installation.
+The [fliem/freesurfer:v6.0.0-3-FSv5.3.0-1](https://hub.docker.com/r/fliem/freesurfer/tags/)
+docker image can be used for that and can be run like this:
+
+	docker run -ti --rm \
+	-v /Users/filo/data/ds005:/bids_dataset:ro \
+	-v /Users/filo/outputs:/outputs \
+	fliem/freesurfer:v6.0.0-3-FSv5.3.0-1 \
+	/bids_dataset /outputs participant --participant_label 01 \
+	--license_key "XXXXXXXX"
+
+
 ## Models
 **Liem2016__OCI_norm**: Model trained on subjects that have no
 objective cognitive impairment (OCI) (*OCI norm* in Liem et al., 2017).
