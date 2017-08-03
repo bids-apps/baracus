@@ -2,12 +2,15 @@
 [![CircleCI](https://circleci.com/gh/BIDS-Apps/baracus.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/BIDS-Apps/baracus)
 [![DOI](https://zenodo.org/badge/93560323.svg)](https://zenodo.org/badge/latestdoi/93560323)
 
-
 This [BIDS App](http://bids-apps.neuroimaging.io/) predicts brain age,
 based on data from Freesurfer 5.3.
 It combines data from cortical thickness, cortical surface area, and
 subcortical information (see Liem et al., 2017).
 
+**How to cite BARACUS:** If you use BARACUS in your work please cite:
+1. Liem et al. (2017) and
+1. the [zenodo DOI](https://zenodo.org/badge/latestdoi/93560323)
+of the version you used.
 
 Liem et al. (2017). Predicting brain-age
 from multimodal imaging data captures cognitive impairment.
