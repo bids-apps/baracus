@@ -37,7 +37,7 @@ ENV PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
 ENV MNI_PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
 ENV PATH=/opt/freesurfer/bin:/opt/freesurfer/fsfast/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 
-RUN sudo apt-get update && apt-get install -y tree htop
+RUN sudo apt-get update && apt-get install -y tree htop unzip
 RUN sudo apt-get update && apt-get install -y tcsh
 RUN sudo apt-get update && apt-get install -y bc
 RUN sudo apt-get update && apt-get install -y tar libgomp1 perl-modules
@@ -47,8 +47,12 @@ RUN 2to3-3.4 -w $FREESURFER_HOME/bin/aparcstats2table
 RUN 2to3-3.4 -w $FREESURFER_HOME/bin/asegstats2table
 RUN 2to3-3.4 -w $FREESURFER_HOME/bin/*.py
 
-# freesurfer repo
+# download models
 RUN mkdir /code
+RUN wget -qO models.zip https://www.dropbox.com/s/5xbqw8i2e7x0g02/models.zip?dl=0 && \
+unzip models.zip && mv models /code/ && rm models.zip
+
+# freesurfer repo
 RUN wget https://github.com/bids-apps/freesurfer/archive/v6.0.0-5.tar.gz && \
 tar xfz v6.0.0-5.tar.gz && rm -r v6.0.0-5.tar.gz && \
 cd freesurfer-6.0.0-5 && mv run.py /code/run_freesurfer.py
@@ -82,8 +86,6 @@ RUN pip install duecredit
 COPY . /code/
 RUN cd /code && ls && pip install -e .
 
-RUN apt-get install -y unzip
-RUN wget -qO models.zip https://www.dropbox.com/s/5xbqw8i2e7x0g02/models.zip?dl=0 && \
-unzip models.zip && mv models /code/ && rm models.zip
+
 
 ENTRYPOINT ["run_brain_age_bids.py"]
