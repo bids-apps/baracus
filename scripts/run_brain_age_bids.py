@@ -57,7 +57,8 @@ if __name__ == "__main__":
 
     if args.analysis_level == "participant":
 
-        data_files = run_prepare_all(args.bids_dir, args.freesurfer_dir, args.out_dir, subjects_to_analyze, sessions_to_analyze, args.n_cpus, args.license_key)
+        data_files = run_prepare_all(args.bids_dir, args.freesurfer_dir, args.out_dir, subjects_to_analyze,
+                                     sessions_to_analyze, args.n_cpus, args.license_key)
 
         for subject, d in data_files.items():
             d["out_dir"] = args.out_dir
