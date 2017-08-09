@@ -74,6 +74,8 @@ ENV LC_ALL=C.UTF-8
 
 
 RUN pip install nibabel
+RUN pip install pandas
+RUN pip install sklearn
 RUN pip install pybids
 
 COPY . /code/
