@@ -61,7 +61,7 @@ ENV PATH=/code:$PATH
 
 # Install anaconda
 RUN echo 'export PATH=/usr/local/anaconda:$PATH' > /etc/profile.d/conda.sh && \
-    wget --quiet https://repo.continuum.io/archive/Miniconda3-latest-Linux-x86_64.sh -O anaconda.sh && \
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O anaconda.sh && \
     /bin/bash anaconda.sh -b -p /usr/local/anaconda && \
     rm anaconda.sh
 
