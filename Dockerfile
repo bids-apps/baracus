@@ -19,22 +19,27 @@ RUN wget -qO- https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/5.3.0/frees
 
 RUN /bin/bash -c 'touch /opt/freesurfer/.license'
 
-ENV OS Linux
-ENV FS_OVERRIDE 0
+ENV OS=Linux
+ENV FS_OVERRIDE=0
 ENV FIX_VERTEX_AREA=
-ENV SUBJECTS_DIR /opt/freesurfer/subjects
-ENV FSF_OUTPUT_FORMAT nii.gz
-ENV MNI_DIR /opt/freesurfer/mni
-ENV LOCAL_DIR /opt/freesurfer/local
-ENV FREESURFER_HOME /opt/freesurfer
-ENV FSFAST_HOME /opt/freesurfer/fsfast
-ENV MINC_BIN_DIR /opt/freesurfer/mni/bin
-ENV MINC_LIB_DIR /opt/freesurfer/mni/lib
-ENV MNI_DATAPATH /opt/freesurfer/mni/data
-ENV FMRI_ANALYSIS_DIR /opt/freesurfer/fsfast
-ENV PERL5LIB /opt/freesurfer/mni/lib/perl5/5.8.5
-ENV MNI_PERL5LIB /opt/freesurfer/mni/lib/perl5/5.8.5
-ENV PATH /opt/freesurfer/bin:/opt/freesurfer/fsfast/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV SUBJECTS_DIR=/opt/freesurfer/subjects
+ENV FSF_OUTPUT_FORMAT=nii.gz
+ENV MNI_DIR=/opt/freesurfer/mni
+ENV LOCAL_DIR=/opt/freesurfer/local
+ENV FREESURFER_HOME=/opt/freesurfer
+ENV FSFAST_HOME=/opt/freesurfer/fsfast
+ENV MINC_BIN_DIR=/opt/freesurfer/mni/bin
+ENV MINC_LIB_DIR=/opt/freesurfer/mni/lib
+ENV MNI_DATAPATH=/opt/freesurfer/mni/data
+ENV FMRI_ANALYSIS_DIR=/opt/freesurfer/fsfast
+ENV PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
+ENV MNI_PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
+ENV PATH=/opt/freesurfer/bin:/opt/freesurfer/fsfast/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
+
+RUN sudo apt-get update && apt-get install -y tree htop
+RUN sudo apt-get update && apt-get install -y tcsh
+RUN sudo apt-get update && apt-get install -y bc
+RUN sudo apt-get update && apt-get install -y tar libgomp1 perl-modules
 
 # make freesurfer python scripts python3 ready
 RUN 2to3-3.4 -w $FREESURFER_HOME/bin/aparcstats2table
@@ -67,6 +72,8 @@ ENV LC_ALL=C.UTF-8
 
 
 RUN pip install nibabel
+RUN pip install pybids
+
 COPY . /code/
 RUN cd /code && ls && pip install -e .
 
