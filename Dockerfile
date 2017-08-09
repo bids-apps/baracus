@@ -1,4 +1,4 @@
-FROM bids/base_validator
+FROM bids/base_validator:latest
 
 RUN apt-get update \
     && apt-get install -y wget tcsh
