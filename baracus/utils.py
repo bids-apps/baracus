@@ -21,7 +21,7 @@ def run(command, env={}, ignore_errors=False):
 
 def run_fs_if_not_available(bids_dir, freesurfer_dir, subject_label, license_key, n_cpus, sessions=[]):
     freesurfer_subjects = []
-    if len(sessions) > 1:
+    if sessions:
         # long
         for session_label in sessions:
             freesurfer_subjects.append("sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label))
