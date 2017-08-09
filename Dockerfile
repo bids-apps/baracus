@@ -6,7 +6,6 @@ RUN apt-get update \
 RUN wget -qO- https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/5.3.0/freesurfer-Linux-centos6_x86_64-stable-pub-v5.3.0.tar.gz | tar zxv -C /opt \
   --exclude='freesurfer/subjects/fsaverage_sym' \
   --exclude='freesurfer/subjects/fsaverage3' \
-  --exclude='freesurfer/subjects/fsaverage4' \
   --exclude='freesurfer/subjects/fsaverage5' \
   --exclude='freesurfer/subjects/fsaverage6' \
   --exclude='freesurfer/subjects/cvs_avg35' \
