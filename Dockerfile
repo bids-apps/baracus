@@ -1,21 +1,22 @@
-FROM ubuntu:trusty
+FROM bids/base_validator
 
 RUN apt-get update \
     && apt-get install -y wget tcsh
 
-RUN wget -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/5.3.0-HCP/freesurfer-Linux-centos4_x86_64-stable-pub-v5.3.0-HCP.tar.gz | tar zxv -C /opt \
-    --exclude='freesurfer/trctrain' \
-    --exclude='freesurfer/subjects/fsaverage_sym' \
-    --exclude='freesurfer/subjects/fsaverage3' \
-    --exclude='freesurfer/subjects/fsaverage5' \
-    --exclude='freesurfer/subjects/fsaverage6' \
-    --exclude='freesurfer/subjects/cvs_avg35' \
-    --exclude='freesurfer/subjects/cvs_avg35_inMNI152' \
-    --exclude='freesurfer/subjects/bert' \
-    --exclude='freesurfer/subjects/V1_average' \
-    --exclude='freesurfer/average/mult-comp-cor' \
-    --exclude='freesurfer/lib/cuda' \
-    --exclude='freesurfer/lib/qt'
+RUN wget -qO- https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/5.3.0/freesurfer-Linux-centos6_x86_64-stable-pub-v5.3.0.tar.gz | tar zxv -C /opt \
+  --exclude='freesurfer/subjects/fsaverage_sym' \
+  --exclude='freesurfer/subjects/fsaverage3' \
+  --exclude='freesurfer/subjects/fsaverage4' \
+  --exclude='freesurfer/subjects/fsaverage5' \
+  --exclude='freesurfer/subjects/fsaverage6' \
+  --exclude='freesurfer/subjects/cvs_avg35' \
+  --exclude='freesurfer/subjects/cvs_avg35_inMNI152' \
+  --exclude='freesurfer/subjects/bert' \
+  --exclude='freesurfer/subjects/V1_average' \
+  --exclude='freesurfer/average/mult-comp-cor' \
+  --exclude='freesurfer/lib/cuda' \
+  --exclude='freesurfer/lib/qt'
+
 
 RUN /bin/bash -c 'touch /opt/freesurfer/.license'
 
@@ -40,6 +41,16 @@ ENV PATH /opt/freesurfer/bin:/opt/freesurfer/fsfast/bin:/opt/freesurfer/tktools:
 RUN 2to3-3.4 -w $FREESURFER_HOME/bin/aparcstats2table
 RUN 2to3-3.4 -w $FREESURFER_HOME/bin/asegstats2table
 RUN 2to3-3.4 -w $FREESURFER_HOME/bin/*.py
+
+# freesurfer repo
+RUN wget https://github.com/bids-apps/freesurfer/archive/v6.0.0-5.tar.gz && \
+tar xfz v6.0.0-5.tar.gz && rm -r v6.0.0-5.tar.gz && \
+cd freesurfer-6.0.0-5 && mv run.py /code/run_freesurfer.py
+# since we are unsing bids app run code from FS6 and we run it with FS5.3,
+# we need to remove the parallel flag of recon-all
+RUN cd /code && sed -e "s/-parallel //g" /code/run_freesurfer.py
+RUN touch /code/version
+ENV PATH=/code:$PATH
 
 # Install anaconda
 RUN echo 'export PATH=/usr/local/anaconda:$PATH' > /etc/profile.d/conda.sh && \
