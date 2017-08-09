@@ -51,6 +51,7 @@ def run_fs_if_not_available(bids_dir, freesurfer_dir, subject_label, license_key
 
 def get_subjects_session(layout, participant_label, truly_longitudinal_study):
     valid_subjects = layout.get_subjects(modality="anat", type="T1w")
+    freesurfer_subjects = []
 
     if participant_label:
         subjects_to_analyze = set(participant_label) & set(valid_subjects)
@@ -62,7 +63,13 @@ def get_subjects_session(layout, participant_label, truly_longitudinal_study):
         subjects_to_analyze = valid_subjects
 
     sessions_to_analyze = {}
-    if truly_longitudinal_study:
-        for subject in subjects_to_analyze:
-            sessions_to_analyze[subject] = layout.get_sessions(modality="anat", type="T1w", subject=subject)
-    return subjects_to_analyze, sessions_to_analyze
+    for subject in subjects_to_analyze:
+        if truly_longitudinal_study:
+            sessions = layout.get_sessions(modality="anat", type="T1w", subject=subject)
+            sessions_to_analyze[subject] = sessions
+            for session in sessions:
+                freesurfer_subjects.append("sub-{sub}_ses-{ses}".format(sub=subject, ses=session))
+        else:
+            freesurfer_subjects.append("sub-{sub}".format(sub=subject))
+
+    return subjects_to_analyze, sessions_to_analyze, freesurfer_subjects

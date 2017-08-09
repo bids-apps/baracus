@@ -52,8 +52,9 @@ if __name__ == "__main__":
     layout = BIDSLayout(args.bids_dir)
 
     truly_longitudinal_study = True if len(layout.get_sessions()) > 1 else False
-    subjects_to_analyze, sessions_to_analyze = get_subjects_session(layout, args.participant_label,
-                                                                    truly_longitudinal_study)
+    subjects_to_analyze, sessions_to_analyze, freesurfer_subjects_to_analyze = get_subjects_session(layout,
+                                                                                                    args.participant_label,
+                                                                                                    truly_longitudinal_study)
 
     if args.analysis_level == "participant":
 
@@ -70,7 +71,7 @@ if __name__ == "__main__":
     elif args.analysis_level == "group":
         print("Creating group table...")
         df = pd.DataFrame([])
-        for subject in subjects_to_analyze:
+        for subject in freesurfer_subjects_to_analyze:
             in_file = os.path.join(args.out_dir, subject, subject + "_predicted_age.tsv")
             df = df.append(pd.read_csv(in_file, sep="\t"))
 
