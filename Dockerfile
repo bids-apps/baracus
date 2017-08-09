@@ -77,6 +77,7 @@ RUN pip install nibabel
 RUN pip install pandas
 RUN pip install sklearn
 RUN pip install pybids
+RUN pip install duecredit
 
 COPY . /code/
 RUN cd /code && ls && pip install -e .
