@@ -43,6 +43,7 @@ RUN 2to3-3.4 -w $FREESURFER_HOME/bin/asegstats2table
 RUN 2to3-3.4 -w $FREESURFER_HOME/bin/*.py
 
 # freesurfer repo
+RUN mkdir /code
 RUN wget https://github.com/bids-apps/freesurfer/archive/v6.0.0-5.tar.gz && \
 tar xfz v6.0.0-5.tar.gz && rm -r v6.0.0-5.tar.gz && \
 cd freesurfer-6.0.0-5 && mv run.py /code/run_freesurfer.py
