@@ -2,8 +2,6 @@ import os
 import subprocess
 from subprocess import Popen, PIPE
 
-from scripts.run_brain_age_bids import args
-
 
 def run(command, env={}, ignore_errors=False):
     merged_env = os.environ
@@ -55,8 +53,8 @@ def get_subjects_session(layout, participant_label, truly_longitudinal_study):
     valid_subjects = layout.get_subjects(modality="anat", type="T1w")
 
     if participant_label:
-        subjects_to_analyze = set(args.participant_label) & set(valid_subjects)
-        subjects_not_found = set(args.participant_label) - set(subjects_to_analyze)
+        subjects_to_analyze = set(participant_label) & set(valid_subjects)
+        subjects_not_found = set(participant_label) - set(subjects_to_analyze)
 
         if subjects_not_found:
             raise Exception("Requested subjects not found or do not have required data: {}".format(subjects_not_found))
