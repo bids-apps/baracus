@@ -82,6 +82,7 @@ RUN pip install pandas
 RUN pip install sklearn
 RUN pip install pybids
 RUN pip install duecredit
+RUN pip install scipy
 
 COPY . /code/
 RUN cd /code && ls && pip install -e .
