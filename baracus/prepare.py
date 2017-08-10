@@ -54,15 +54,17 @@ def run_prepare_all(bids_dir, freesurfer_dir, out_dir, subjects_to_analyze, sess
             os.symlink(os.path.join(fsav_dir, fsav), os.path.join(freesurfer_dir, fsav))
 
     # check if freesurfer is available and run if missing
+    freesurfer_subjects = []
     for subject in subjects_to_analyze:
         sessions = sessions_to_analyze.get(subject)
-        freesurfer_subjects = run_fs_if_not_available(bids_dir, freesurfer_dir, subject, license_key, n_cpus, sessions)
+        freesurfer_subjects.append(run_fs_if_not_available(bids_dir, freesurfer_dir, subject, license_key, n_cpus,
+                                                       sessions))
 
     # downsample surfaces to fsaverage4 and extract subcortical data from aseg
     out_files = {}
     for fs_subject in freesurfer_subjects:
         print("preparing %s" % subject)
-        out_files[subject] = prepare_fs_data(freesurfer_dir, out_dir, fs_subject)
+        out_files[fs_subject] = prepare_fs_data(freesurfer_dir, out_dir, fs_subject)
 
     print("FINISHED. Prepared %s" % " ".join(freesurfer_subjects))
     return out_files
