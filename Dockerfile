@@ -56,10 +56,10 @@ unzip models.zip && mv models /code/ && rm models.zip
 RUN wget https://github.com/bids-apps/freesurfer/archive/v6.0.0-5.tar.gz && \
 tar xfz v6.0.0-5.tar.gz && rm -r v6.0.0-5.tar.gz && \
 cd freesurfer-6.0.0-5 && mv run.py /code/run_freesurfer.py
-# since we are unsing bids app run code from FS6 and we run it with FS5.3,
+# since we are using freesurfer-bids-app-run-code from FS6 and we run it with FS5.3,
 # we need to remove the parallel flag of recon-all
-RUN cd /code && sed -e "s/-parallel //g" /code/run_freesurfer.py
-RUN touch /code/version
+RUN sed -e "s/-parallel //g" -i /code/run_freesurfer.py
+RUN echo "FS5.3_BIDSAPPv6.0.0-5" > /code/version
 ENV PATH=/code:$PATH
 
 
