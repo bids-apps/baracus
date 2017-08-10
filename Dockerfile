@@ -65,7 +65,7 @@ ENV PATH=/code:$PATH
 
 # Install anaconda
 RUN echo 'export PATH=/usr/local/anaconda:$PATH' > /etc/profile.d/conda.sh && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O anaconda.sh && \
+    wget --quiet https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh -O anaconda.sh && \
     /bin/bash anaconda.sh -b -p /usr/local/anaconda && \
     rm anaconda.sh
 
@@ -78,11 +78,9 @@ ENV LC_ALL=C.UTF-8
 
 
 RUN pip install nibabel
-RUN pip install pandas
-RUN pip install sklearn
 RUN pip install pybids
 RUN pip install duecredit
-RUN pip install scipy
+
 
 COPY . /code/
 RUN cd /code && ls && pip install -e .
