@@ -7,36 +7,36 @@ based on data from Freesurfer 5.3.
 It combines data from cortical thickness, cortical surface area, and
 subcortical information (see Liem et al., 2017).
 
-**How to cite BARACUS:** If you use BARACUS in your work please cite:
-1. Liem et al. (2017) and
+## Requirements
+Your data has to be organized according to the
+[BIDS standard](http://bids.neuroimaging.io) and each subject needs at
+least one T1w image.
+In a first step, BARACUS runs [FreeSurfer's](http://freesurfer.net)
+`recon-all` command and saves the output in `--freesurfer_dir`.
+If the data has previously been analyzed with FreeSurfer version 5.3.0,
+and BARACUS finds them in `--freesurfer_dir` this step ist skippen.
+
+**Important:** if you use previously processed FreeSurfer data
+
+1. the data has to be preprocessed with
+Freesurfer's 5.3.0 installation, not the 5.3.0-HCP installation;
+2. FreeSurfer data needs to be BIDS-formatted, i.e. subject folders
+should be named *sub-<subject_label>*, (e.g., sub-01, sub-02...)
+
+
+## Acknowledgements
+If you use BARACUS in your work please cite:
+
+1. Liem et al. (2017),
 1. the [zenodo DOI](https://zenodo.org/badge/latestdoi/93560323)
-of the version you used.
+of the BARACUS version you used, and
+1. The [FreeSurfer tool](https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferMethodsCitation)
 
 Liem et al. (2017). Predicting brain-age
 from multimodal imaging data captures cognitive impairment.
 Neuroimage, 148:179–188,
 [doi: 10.1016/j.neuroimage.2016.11.005](http://www.sciencedirect.com/science/article/pii/S1053811916306103).
 [\[preprint\]](http://www.biorxiv.org/content/early/2016/11/07/085506)
-
-
-## Requirements
-Before age prediction can be performed, [FreeSurfer's](http://freesurfer.net)
-`recon-all` command has to be run with Freesurfer version 5.3.
-Freesurfer data has to be in [BIDS format](http://bids.neuroimaging.io),
-i.e. subject folders should be named
-*sub-<subject_label>*, (e.g., sub-01, sub-02...).
-
-**Important:** The data has to be preprocessed with
-Freesurfer's 5.3.0 installation, not the 5.3.0-HCP installation.
-The [fliem/freesurfer:v6.0.0-3-FSv5.3.0-1](https://hub.docker.com/r/fliem/freesurfer/tags/)
-docker image can be used for that and can be run like this:
-
-	docker run -ti --rm \
-	-v /Users/filo/data/ds005:/bids_dataset:ro \
-	-v /Users/filo/outputs:/outputs \
-	fliem/freesurfer:v6.0.0-3-FSv5.3.0-1 \
-	/bids_dataset /outputs participant --participant_label 01 \
-	--license_key "XXXXXXXX"
 
 
 ## Models
@@ -50,10 +50,8 @@ Sample: N = 2377, 1133f/1244m, age: M=58.4, SD=15.4, 18-83y;
 containing data from the LIFE and NKI studies.
 
 
-
-
 ## Modes
-It can be run in **BIDS mode** and in in **FILE mode**.
+It can be run in **BIDS mode** (recommended) and in in **FILE mode**.
 
 In BIDS mode the input is a BIDS formatted Freesurfer folder.
 
@@ -66,42 +64,50 @@ aseg files extracted via asegstats2table.
 
 ## BIDS mode
 ### Example
-#### Introduction
 These examples demonstrate how to run the `bids/baracus` docker container.
 For a brief introduction how to run BIDS Apps see
 [this site](http://bids-apps.neuroimaging.io/tutorial/).
-In the examples `project/freesurfer` and `/project/out` are directories
+In the examples `/project/bids_sourcedata`, `/project/freesurfer` and
+`/project/baracus` are directories
 on your hard drive, which are mapped into the docker container directories
-`/data/in` and `/data/out`, respectively, via the `-v` flag.
+`/data/in`, `/data/freesurfer` and `/data/out`, respectively, via
+the `-v` flag.
 
 #### Participants
 
     docker run -ti --rm \
-    -v /project/freesurfer/:/data/in \
-    -v /project/out:/data/out \
-    bids/baracus /data/in /data/out participant
+    -v /project/bids_sourcedata/:/data/in \
+    -v /project/freesurfer/:/data/freesurfer \
+    -v /project/baracus:/data/out \
+    bids/baracus /data/in /data/out participant \
+    --license_key "XX" --freesurfer_dir /data/freesurfer
 
 #### Group
 
     docker run -ti --rm \
-    -v /project/freesurfer/:/data/in \
-    -v /project/out:/data/out \
-    bids/baracus /data/in /data/out group
+    -v /project/bids_sourcedata/:/data/in \
+    -v /project/freesurfer/:/data/freesurfer \
+    -v /project/baracus:/data/out \
+    bids/baracus /data/in /data/out group \
+    --license_key "XX" --freesurfer_dir /data/freesurfer
 
 ### Usage
 
+    docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME,,} -h
     usage: run_brain_age_bids.py [-h]
                                  [--participant_label PARTICIPANT_LABEL [PARTICIPANT_LABEL ...]]
+                                 --freesurfer_dir FREESURFER_DIR
                                  [--models {Liem2016__OCI_norm,Liem2016__full_2samp_training} [{Liem2016__OCI_norm,Liem2016__full_2samp_training} ...]]
-                                 freesurfer_dir out_dir {participant,group}
+                                 --license_key LICENSE_KEY [--n_cpus N_CPUS] [-v]
+                                 bids_dir out_dir {participant,group}
 
     BARACUS: Brain-Age Regression Analysis and Computation Utility Software. BIDS
     mode. You specify a BIDS-formatted freesurfer folder as input. All data is
     extracted automatiacally from that folder.
 
     positional arguments:
-      freesurfer_dir        Folder with freesurfer subjects formatted according to
-                            BIDS standard.
+      bids_dir              The directory with the input dataset formatted
+                            according to the BIDS standard.
       out_dir               Results are put here.
       {participant,group}   Level of the analysis that will be performed.
                             "participant": predicts single subject brain age,
@@ -116,8 +122,18 @@ on your hard drive, which are mapped into the docker container directories
                             parameter is not provided all subjects should be
                             analyzed. Multiple participants can be specified with
                             a space separated list.
+      --freesurfer_dir FREESURFER_DIR
+                            Folder with FreeSurfer subjects formatted according to
+                            BIDS standard. If subject's recon-all folder cannot be
+                            found, recon-all will be run.
       --models {Liem2016__OCI_norm,Liem2016__full_2samp_training} [{Liem2016__OCI_norm,Liem2016__full_2samp_training} ...]
-
+      --license_key LICENSE_KEY
+                            FreeSurfer license key - letters and numbers after "*"
+                            in the email you received after registration. To
+                            register (for free) visit
+                            https://surfer.nmr.mgh.harvard.edu/registration.html
+      --n_cpus N_CPUS       Number of CPUs/cores available to use.
+      -v, --version         show program's version number and exit
 
 
 ## FILE mode

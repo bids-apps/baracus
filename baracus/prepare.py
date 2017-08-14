@@ -1,23 +1,6 @@
 import os
-from subprocess import Popen, PIPE
-import subprocess
 
-
-# https://github.com/BIDS-Apps/freesurfer/blob/master/run.py#L12
-def run(command, env={}, ignore_errors=False):
-    merged_env = os.environ
-    merged_env.update(env)
-    # DEBUG env triggers freesurfer to produce gigabytes of files
-    merged_env.pop('DEBUG', None)
-    process = Popen(command, stdout=PIPE, stderr=subprocess.STDOUT, shell=True, env=merged_env)
-    while True:
-        line = process.stdout.readline()
-        line = str(line, 'utf-8')[:-1]
-        print(line)
-        if line == '' and process.poll() != None:
-            break
-    if process.returncode != 0 and not ignore_errors:
-        raise Exception("Non zero return code: %d" % process.returncode)
+from baracus.utils import run, run_fs_if_not_available
 
 
 def prepare_fs_data(fs_dir, out_dir, subject):
@@ -54,17 +37,34 @@ def prepare_aseg(fs_dir, out_dir, subject):
     return out_file
 
 
-def run_prepare_all(freesurfer_dir, out_dir, subjects_to_analyze):
-    # downsample surfaces to fsaverage4 and extract subcortical data from aseg
+def run_prepare_all(bids_dir, freesurfer_dir, out_dir, subjects_to_analyze, sessions_to_analyze, n_cpus, license_key):
+    """
+
+    :param bids_dir:
+    :param freesurfer_dir:
+    :param out_dir:
+    :param subjects_to_analyze:
+    :param sessions_to_analyze: {"subject_label": ["test", "retest"],...}; {} if not truly_long_study
+    :return:
+    """
+
     fsav_dir = os.path.join(os.environ["FREESURFER_HOME"], "subjects")
     for fsav in ["fsaverage", "fsaverage4"]:
         if not os.path.exists(os.path.join(freesurfer_dir, fsav)):
             os.symlink(os.path.join(fsav_dir, fsav), os.path.join(freesurfer_dir, fsav))
 
-    out_files = {}
+    # check if freesurfer is available and run if missing
+    freesurfer_subjects = []
     for subject in subjects_to_analyze:
-        print("preparing %s" % subject)
-        out_files[subject] = prepare_fs_data(freesurfer_dir, out_dir, subject)
+        sessions = sessions_to_analyze.get(subject)
+        freesurfer_subjects.extend(run_fs_if_not_available(bids_dir, freesurfer_dir, subject, license_key, n_cpus,
+                                                       sessions))
 
-    print("FINISHED. Prepared %s" % " ".join(subjects_to_analyze))
+    # downsample surfaces to fsaverage4 and extract subcortical data from aseg
+    out_files = {}
+    for fs_subject in freesurfer_subjects:
+        print("preparing %s" % fs_subject)
+        out_files[fs_subject] = prepare_fs_data(freesurfer_dir, out_dir, fs_subject)
+
+    print("FINISHED. Prepared %s" % " ".join(freesurfer_subjects))
     return out_files

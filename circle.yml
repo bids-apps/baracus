@@ -16,7 +16,10 @@ dependencies:
     - git describe --tags > version
     - docker build -t bids/${CIRCLE_PROJECT_REPONAME,,} . :
         timeout: 21600
-    - mkdir -p ~/docker; docker save "bids/${CIRCLE_PROJECT_REPONAME,,}" > ~/docker/image.tar
+    - mkdir -p ~/docker; docker save "bids/${CIRCLE_PROJECT_REPONAME}" > ~/docker/image.tar
+
+    - if [[ ! -d ~/data/ds114_test1 ]]; then wget -c -O ${HOME}/ds114_test1.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e54a326c613b01d7d3ed90" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test1.tar -C ${HOME}/data; fi
+    - if [[ ! -d ~/data/ds114_test2 ]]; then wget -c -O ${HOME}/ds114_test2.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e549f9b83f6901d457d162" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test2.tar -C ${HOME}/data; fi
     - if [[ ! -d ~/data/ds114_test1_freesurfer ]]; then wget -c -O ${HOME}/ds114_test1_freesurfer.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882adf3b83f6901f564da49" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test1_freesurfer.tar -C ${HOME}/data; fi
     - if [[ ! -d ~/data/ds114_test2_freesurfer ]]; then wget -c -O ${HOME}/ds114_test2_freesurfer.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882b0e3b83f6901fb64da18" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test2_freesurfer.tar -C ${HOME}/data; fi
 
@@ -26,21 +29,24 @@ test:
     - docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME,,} -v
     - docker run --rm -ti --entrypoint=run_brain_age_files.py bids/baracus -h
     - docker run --rm -ti --entrypoint=run_brain_age_files.py bids/baracus -v
+
     # ds114_test1
-    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
-    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1:/data/in -v ${HOME}/data/ds114_test1_freesurfer:/data/fs -v ${HOME}/outputs/ds114_test1:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant --freesurfer_dir /data/fs --license_key="~/test.key"
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1:/data/in -v ${HOME}/data/ds114_test1_freesurfer:/data/fs -v ${HOME}/outputs/ds114_test1:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group --freesurfer_dir /data/fs --license_key="~/test.key"
     - cat ${HOME}/outputs/ds114_test1/00_group/group_predicted_age.tsv
-    # ## test models
-    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1_models:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant --models Liem2016__OCI_norm Liem2016__full_2samp_training
-    - docker run --rm -ti -v ${HOME}/data/ds114_test1_freesurfer:/data/in -v ${HOME}/outputs/ds114_test1_models:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
+
+    # test models
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1:/data/in -v ${HOME}/data/ds114_test1_freesurfer:/data/fs -v ${HOME}/outputs/ds114_test1_models:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant --freesurfer_dir /data/fs --models Liem2016__OCI_norm Liem2016__full_2samp_training --license_key="~/test.key"
+    - docker run --rm -ti -v ${HOME}/data/ds114_test1:/data/in -v ${HOME}/data/ds114_test1_freesurfer:/data/fs -v ${HOME}/outputs/ds114_test1_models:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group --freesurfer_dir /data/fs --license_key="~/test.key"
     - cat ${HOME}/outputs/ds114_test1_models/00_group/group_predicted_age.tsv
+    
     # test file mode
     - docker run --rm -ti -v ${HOME}/outputs/ds114_test1/sub-01/data/:/data/in -v ${HOME}/outputs/ds114_test1_file_mode:/data/out --entrypoint=run_brain_age_files.py bids/baracus /data/out --lh_thickness_file /data/in/lh.thickness.mgh --rh_thickness_file /data/in/rh.thickness.mgh --lh_area_file /data/in/lh.area.mgh --rh_area_file /data/in/rh.area.mgh --aseg_file /data/in/aseg --participant_label sub-01
     - cat ${HOME}/outputs/ds114_test1_file_mode/sub-01/sub-01_predicted_age.tsv
 
     # ds114_test2
-    - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant
-    - docker run --rm -ti -v ${HOME}/data/ds114_test2_freesurfer:/data/in -v ${HOME}/outputs/ds114_test2:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group
+    - docker run --rm -ti -v ${HOME}/data/ds114_test2:/data/in -v ${HOME}/data/ds114_test2_freesurfer:/data/fs -v ${HOME}/outputs/ds114_test2:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out participant --freesurfer_dir /data/fs --license_key="~/test.key"
+    - docker run --rm -ti -v ${HOME}/data/ds114_test2:/data/in -v ${HOME}/data/ds114_test2_freesurfer:/data/fs -v ${HOME}/outputs/ds114_test2:/data/out bids/${CIRCLE_PROJECT_REPONAME,,} /data/in /data/out group --freesurfer_dir /data/fs --license_key="~/test.key"
     - cat ${HOME}/outputs/ds114_test2/00_group/group_predicted_age.tsv
 
 deployment:
