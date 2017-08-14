@@ -33,7 +33,7 @@ if __name__ == "__main__":
                         nargs="+")
     parser.add_argument('--freesurfer_dir', required=True, help="Folder with FreeSurfer subjects formatted according "
                                                                 "to BIDS standard. If subject's recon-all folder "
-                                                                "cannot be found, it will be run.")
+                                                                "cannot be found, recon-all will be run.")
     parser.add_argument('--models', choices=models_list, default=["Liem2016__OCI_norm"], help='',
                         nargs="+")
     parser.add_argument('--license_key',
