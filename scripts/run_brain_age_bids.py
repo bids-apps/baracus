@@ -48,12 +48,16 @@ if __name__ == "__main__":
                         version='BARACUS version {}'.format(__version__))
     args = parser.parse_args()
 
+    # set up output dirs
     if args.freesurfer_dir:
         freesurfer_dir = args.freesurfer_dir
     else:
         freesurfer_dir = os.path.join(args.out_dir, "freesurfer")
-
     out_dir = os.path.join(args.out_dir, "baracus")
+    if not os.path.isdir(freesurfer_dir):
+        os.makedirs(freesurfer_dir)
+    if not os.path.isdir(out_dir):
+        os.makedirs(out_dir)
 
     model_dir = resource_filename(Requirement.parse("baracus"), 'models')
 
