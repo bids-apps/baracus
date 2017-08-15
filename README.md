@@ -12,7 +12,7 @@ Your data has to be organized according to the
 [BIDS standard](http://bids.neuroimaging.io) and each subject needs at
 least one T1w image.
 In a first step, BARACUS runs [FreeSurfer's](http://freesurfer.net)
-`recon-all` command and saves the output in `--freesurfer_dir`.
+`recon-all` command and saves the output in `{out_dir}/freesurfer/`
 If the data has previously been analyzed with FreeSurfer version 5.3.0,
 and BARACUS finds them in `--freesurfer_dir` this step ist skippen.
 
@@ -67,13 +67,31 @@ aseg files extracted via asegstats2table.
 These examples demonstrate how to run the `bids/baracus` docker container.
 For a brief introduction how to run BIDS Apps see
 [this site](http://bids-apps.neuroimaging.io/tutorial/).
-In the examples `/project/bids_sourcedata`, `/project/freesurfer` and
-`/project/baracus` are directories
-on your hard drive, which are mapped into the docker container directories
-`/data/in`, `/data/freesurfer` and `/data/out`, respectively, via
-the `-v` flag.
+In the examples `/project/bids_sourcedata` and
+`/project/baracus` are directories on your hard drive, which are mapped
+into the docker container directories `/data/in` and `/data/out`,
+respectively, via the `-v` flag.
 
 #### Participants
+
+    docker run -ti --rm \
+    -v /project/bids_sourcedata/:/data/in \
+    -v /project/baracus:/data/out \
+    bids/baracus /data/in /data/out participant \
+    --license_key "XX"
+
+#### Group
+
+    docker run -ti --rm \
+    -v /project/bids_sourcedata/:/data/in \
+    -v /project/baracus:/data/out \
+    bids/baracus /data/in /data/out group \
+    --license_key "XX"
+
+#### Participants with previously processed FreeSurfer data
+If FreeSurfer data is already available, for example at
+`/project/freesurfer/` running the follwing command will use the
+previously processed data:
 
     docker run -ti --rm \
     -v /project/bids_sourcedata/:/data/in \
@@ -82,21 +100,11 @@ the `-v` flag.
     bids/baracus /data/in /data/out participant \
     --license_key "XX" --freesurfer_dir /data/freesurfer
 
-#### Group
-
-    docker run -ti --rm \
-    -v /project/bids_sourcedata/:/data/in \
-    -v /project/freesurfer/:/data/freesurfer \
-    -v /project/baracus:/data/out \
-    bids/baracus /data/in /data/out group \
-    --license_key "XX" --freesurfer_dir /data/freesurfer
-
 ### Usage
 
-    docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME,,} -h
     usage: run_brain_age_bids.py [-h]
                                  [--participant_label PARTICIPANT_LABEL [PARTICIPANT_LABEL ...]]
-                                 --freesurfer_dir FREESURFER_DIR
+                                 [--freesurfer_dir FREESURFER_DIR]
                                  [--models {Liem2016__OCI_norm,Liem2016__full_2samp_training} [{Liem2016__OCI_norm,Liem2016__full_2samp_training} ...]]
                                  --license_key LICENSE_KEY [--n_cpus N_CPUS] [-v]
                                  bids_dir out_dir {participant,group}
@@ -108,7 +116,7 @@ the `-v` flag.
     positional arguments:
       bids_dir              The directory with the input dataset formatted
                             according to the BIDS standard.
-      out_dir               Results are put here.
+      out_dir               Results are put into {out_dir}/baracus.
       {participant,group}   Level of the analysis that will be performed.
                             "participant": predicts single subject brain age,
                             "group": collects single subject predictions.
@@ -125,7 +133,8 @@ the `-v` flag.
       --freesurfer_dir FREESURFER_DIR
                             Folder with FreeSurfer subjects formatted according to
                             BIDS standard. If subject's recon-all folder cannot be
-                            found, recon-all will be run.
+                            found, recon-all will be run. If not specified
+                            freesurfer data will be saved to {out_dir}/freesurfer
       --models {Liem2016__OCI_norm,Liem2016__full_2samp_training} [{Liem2016__OCI_norm,Liem2016__full_2samp_training} ...]
       --license_key LICENSE_KEY
                             FreeSurfer license key - letters and numbers after "*"
@@ -134,6 +143,7 @@ the `-v` flag.
                             https://surfer.nmr.mgh.harvard.edu/registration.html
       --n_cpus N_CPUS       Number of CPUs/cores available to use.
       -v, --version         show program's version number and exit
+
 
 
 ## FILE mode
