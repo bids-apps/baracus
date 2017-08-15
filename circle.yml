@@ -41,7 +41,7 @@ test:
     - cat ${HOME}/outputs/ds114_test1_models/baracus/00_group/group_predicted_age.tsv
 
     # test file mode
-    - docker run --rm -ti -v ${HOME}/outputs/ds114_test1/sub-01/data/:/data/in -v ${HOME}/outputs/ds114_test1_file_mode:/data/out --entrypoint=run_brain_age_files.py bids/baracus /data/out --lh_thickness_file /data/in/lh.thickness.mgh --rh_thickness_file /data/in/rh.thickness.mgh --lh_area_file /data/in/lh.area.mgh --rh_area_file /data/in/rh.area.mgh --aseg_file /data/in/aseg --participant_label sub-01
+    - docker run --rm -ti -v ${HOME}/outputs/ds114_test1/baracus/sub-01/data/:/data/in -v ${HOME}/outputs/ds114_test1_file_mode:/data/out --entrypoint=run_brain_age_files.py bids/baracus /data/out --lh_thickness_file /data/in/lh.thickness.mgh --rh_thickness_file /data/in/rh.thickness.mgh --lh_area_file /data/in/lh.area.mgh --rh_area_file /data/in/rh.area.mgh --aseg_file /data/in/aseg --participant_label sub-01
     - cat ${HOME}/outputs/ds114_test1_file_mode/sub-01/sub-01_predicted_age.tsv
 
     # ds114_test2
