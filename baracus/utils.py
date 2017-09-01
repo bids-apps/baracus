@@ -36,6 +36,7 @@ def run_fs_if_not_available(bids_dir, freesurfer_dir, subject_label, license_key
 
         if fs_missing:
             cmd = "run_freesurfer.py {in_dir} {out_dir} participant " \
+                  "--hires_mode disable " \
                   "--participant_label {subject_label} " \
                   "--license_key {license_key} " \
                   "--n_cpus {n_cpus} --steps cross-sectional".format(in_dir=bids_dir,
