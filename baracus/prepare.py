@@ -51,8 +51,8 @@ def run_prepare_all(bids_dir, freesurfer_dir, out_dir, subjects_to_analyze, sess
     fsav_dir = os.path.join(os.environ["FREESURFER_HOME"], "subjects")
     for fsav in ["fsaverage", "fsaverage4"]:
         if not os.path.exists(os.path.join(freesurfer_dir, fsav)):
-            os.symlink(os.path.join(fsav_dir, fsav), os.path.join(freesurfer_dir, fsav))
-
+            cmd = "cp -rf {} {}".format(os.path.join(fsav_dir, fsav), os.path.join(freesurfer_dir, fsav))
+            run(cmd)
     # check if freesurfer is available and run if missing
     freesurfer_subjects = []
     for subject in subjects_to_analyze:
