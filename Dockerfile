@@ -1,4 +1,15 @@
-FROM bids/base_validator:latest
+FROM ubuntu:precise
+
+#https://github.com/BIDS-Apps/base_validator/blob/c67ea643e904a70ad3efed620a0bfef8109cd5a4/Dockerfile#L1
+## Install the validator
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+    apt-get remove -y curl && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN npm install -g bids-validator@0.21.1
+
 
 RUN apt-get update \
     && apt-get install -y wget tcsh
