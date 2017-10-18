@@ -23,6 +23,9 @@ Freesurfer's 5.3.0 installation, not the 5.3.0-HCP installation;
 2. FreeSurfer data needs to be BIDS-formatted, i.e. subject folders
 should be named *sub-<subject_label>*, (e.g., sub-01, sub-02...)
 
+**Also important:** if you are comparing groups regarding brain-age,
+make sure that the groups are well matched (e.g. regarding ethnicity;
+see [here](https://github.com/BIDS-Apps/baracus/issues/10)).
 
 ## Acknowledgements
 If you use BARACUS in your work please cite:
