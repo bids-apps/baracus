@@ -48,10 +48,10 @@ ENV PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
 ENV MNI_PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
 ENV PATH=/opt/freesurfer/bin:/opt/freesurfer/fsfast/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 
-RUN sudo apt-get update && apt-get install -y tree htop unzip
-RUN sudo apt-get update && apt-get install -y tcsh
-RUN sudo apt-get update && apt-get install -y bc
-RUN sudo apt-get update && apt-get install -y tar libgomp1 perl-modules
+RUN apt-get update && apt-get install -y tree htop unzip
+RUN apt-get update && apt-get install -y tcsh
+RUN apt-get update && apt-get install -y bc
+RUN apt-get update && apt-get install -y tar libgomp1 perl-modules
 
 # make freesurfer python scripts python3 ready
 RUN 2to3-3.4 -w $FREESURFER_HOME/bin/aparcstats2table
