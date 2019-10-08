@@ -87,7 +87,7 @@ jobs:
               wget -c -O ~/ds114_test1.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e54a326c613b01d7d3ed90" && \
               mkdir -p ~/data && tar xf ~/ds114_test1.tar -C ~/data && \
-              ~/ds114_test1.tar;
+              rm ~/ds114_test1.tar;
             else
               echo "ds114_test1 was cached"
             fi
@@ -99,7 +99,7 @@ jobs:
               wget -c -O ~/ds114_test2.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e549f9b83f6901d457d162" && \
               mkdir -p ~/data && tar xf ~/ds114_test2.tar -C ~/data && \
-              ~/ds114_test2.tar;
+              rm ~/ds114_test2.tar;
             else
               echo "ds114_test2 was cached"
             fi
@@ -111,7 +111,7 @@ jobs:
               wget -c -O ~/ds114_test1_freesurfer.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882adf3b83f6901f564da49" && \
               mkdir -p ~/data && tar xf ~/ds114_test1_freesurfer.tar -C ~/data && \
-              ~/ds114_test1_freesurfer.tar;
+              rm ~/ds114_test1_freesurfer.tar;
             else
               echo "ds114_test1_freesurfer was cached"
             fi
@@ -123,7 +123,7 @@ jobs:
               wget -c -O ~/ds114_test2_freesurfer.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882b0e3b83f6901fb64da18" && \
               mkdir -p ~/data && tar xf ~/ds114_test2_freesurfer.tar -C ~/data && \
-              ~/ds114_test2_freesurfer.tar;
+              rm ~/ds114_test2_freesurfer.tar;
             else
               echo "ds114_test2_freesurfer was cached"
             fi
