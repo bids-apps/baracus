@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build_test:
+  build:
     working_directory: ~/wd
     docker:
       - image: docker:18.01.0-ce-git
@@ -45,6 +45,18 @@ jobs:
             docker build --cache-from=${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} \
             -t ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest .
             docker images
+      - run:
+          name: Usage BIDS
+          command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME,,} -h
+      - run:
+          name: Usage files
+          command: docker run --rm -ti --entrypoint=run_brain_age_files.py bids/baracus -h
+      - run:
+          name: Version BIDS
+          command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME,,} -v
+      - run:
+          name: Version files
+          command: docker run --rm -ti --entrypoint=run_brain_age_files.py bids/baracus -v
       - run:
           name: Docker save
           no_output_timeout: 40m
@@ -124,7 +136,7 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - build_test:
+      - build:
           filters:
             tags:
               only: /.*/
