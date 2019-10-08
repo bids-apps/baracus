@@ -47,16 +47,16 @@ jobs:
             docker images
       - run:
           name: Usage BIDS
-          command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME,,} -h
+          command: docker run -ti --rm ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -h
       - run:
           name: Usage files
-          command: docker run --rm -ti --entrypoint=run_brain_age_files.py bids/baracus -h
+          command: docker run --rm -ti --entrypoint=run_brain_age_files.py ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -h
       - run:
           name: Version BIDS
-          command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME,,} -v
+          command: docker run -ti --rm ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -v
       - run:
           name: Version files
-          command: docker run --rm -ti --entrypoint=run_brain_age_files.py bids/baracus -v
+          command: docker run --rm -ti --entrypoint=run_brain_age_files.py ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -v
       - run:
           name: Docker save
           no_output_timeout: 40m
@@ -86,7 +86,8 @@ jobs:
             if [[ ! -d ~/data/ds114_test1 ]]; then
               wget -c -O ~/ds114_test1.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e54a326c613b01d7d3ed90" && \
-              mkdir -p ~/data && tar xf ~/ds114_test1.tar -C ~/data;
+              mkdir -p ~/data && tar xf ~/ds114_test1.tar -C ~/data && \
+              ~/ds114_test1.tar;
             else
               echo "ds114_test1 was cached"
             fi
@@ -97,7 +98,8 @@ jobs:
             if [[ ! -d ~/data/ds114_test2 ]]; then
               wget -c -O ~/ds114_test2.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e549f9b83f6901d457d162" && \
-              mkdir -p ~/data && tar xf ~/ds114_test2.tar -C ~/data;
+              mkdir -p ~/data && tar xf ~/ds114_test2.tar -C ~/data && \
+              ~/ds114_test2.tar;
             else
               echo "ds114_test2 was cached"
             fi
@@ -108,7 +110,8 @@ jobs:
             if [[ ! -d ~/data/ds114_test1_freesurfer ]]; then
               wget -c -O ~/ds114_test1_freesurfer.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882adf3b83f6901f564da49" && \
-              mkdir -p ~/data && tar xf ~/ds114_test1_freesurfer.tar -C ~/data;
+              mkdir -p ~/data && tar xf ~/ds114_test1_freesurfer.tar -C ~/data && \
+              ~/ds114_test1_freesurfer.tar;
             else
               echo "ds114_test1_freesurfer was cached"
             fi
@@ -119,7 +122,8 @@ jobs:
             if [[ ! -d ~/data/ds114_test2_freesurfer ]]; then
               wget -c -O ~/ds114_test2_freesurfer.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882b0e3b83f6901fb64da18" && \
-              mkdir -p ~/data && tar xf ~/ds114_test2_freesurfer.tar -C ~/data;
+              mkdir -p ~/data && tar xf ~/ds114_test2_freesurfer.tar -C ~/data && \
+              ~/ds114_test2_freesurfer.tar;
             else
               echo "ds114_test2_freesurfer was cached"
             fi
