@@ -58,11 +58,40 @@ jobs:
            paths:
              - /tmp/cache/docker.tar.gz
 
+  get_data:
+    machine:
+      image: circleci/classic:201711-01
+    working_directory: /home/circleci/data
+    steps:
+      - restore_cache:
+          keys:
+            - data-v1-{{ .Revision }}
+            - data-v1-
+      - run:
+          name: Get ds114_test1
+          command: |
+            mkdir -p /tmp/data
+            if [[ ! -d ~/data/ds114_test1 ]]; then
+              wget -c -O ${HOME}/ds114_test1.tar \
+              "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e54a326c613b01d7d3ed90" && \
+              mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test1.tar -C ${HOME}/data;
+            else
+              echo "ds114_test1 was cached"
+            fi
+      - save_cache:
+         key: data-v1-{{ .Revision }}-{{ epoch }}
+         paths:
+            - /tmp/data
+
 workflows:
   version: 2
   build_test_deploy:
     jobs:
       - build_test:
+          filters:
+            tags:
+              only: /.*/
+      - get_data:
           filters:
             tags:
               only: /.*/
