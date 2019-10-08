@@ -1,5 +1,4 @@
 version: 2
-
 jobs:
   build_test:
     working_directory: ~/wd
@@ -19,7 +18,6 @@ jobs:
             - docker-v1-
           paths:
             - /tmp/cache/docker.tar.gz
-            
       # - setup_remote_docker
       # - run:
       #     name: Load Docker image layer cache
