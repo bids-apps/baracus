@@ -77,9 +77,9 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
 
-RUN pip install nibabel
-RUN pip install pybids
-RUN pip install duecredit
+RUN pip install nibabel==2.2.0
+RUN pip install pybids==0.3 grabbit==0.0.8
+RUN pip install duecredit==0.6.3
 
 
 COPY . /code/
