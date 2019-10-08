@@ -127,6 +127,18 @@ jobs:
          key: data-v1-{{ .Revision }}-{{ epoch }}
          paths:
             - ~/data
+  test:
+    machine:
+      image: circleci/classic:201711-01
+    working_directory: ~/data
+    steps:
+      # - restore_cache:
+      #     keys:
+      #       - data-v1-{{ .Revision }}
+      #       - data-v1-
+      - run:
+          name: test1
+          command: ls ~/data/ds114_test2_freesurfer
 
 workflows:
   version: 2
@@ -137,6 +149,13 @@ workflows:
             tags:
               only: /.*/
       - build:
+          filters:
+            tags:
+              only: /.*/
+      - test:
+          requires:
+            - get_data
+            - build
           filters:
             tags:
               only: /.*/
