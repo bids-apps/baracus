@@ -127,6 +127,10 @@ jobs:
             else
               echo "ds114_test2_freesurfer was cached"
             fi
+      - persist_to_workspace:
+          root: ~
+          paths:
+            - data
       - save_cache:
          key: data-v2-{{ .Revision }}-{{ epoch }}
          paths:
