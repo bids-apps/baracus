@@ -127,13 +127,6 @@ jobs:
             else
               echo "ds114_test2_freesurfer was cached"
             fi
-      - persist_to_workspace:
-          root: /home/circleci/data
-          paths:
-            - ds114_test1/
-            - ds114_test2/
-            - ds114_test1_freesurfer/
-            - ds114_test2_freesurfer/
       - save_cache:
          key: data-v2-{{ .Revision }}-{{ epoch }}
          paths:
@@ -143,12 +136,10 @@ jobs:
       image: circleci/classic:201711-01
 #    working_directory: ~/data
     steps:
-      # - restore_cache:
-      #     keys:
-      #       - data-v2-{{ .Revision }}
-      #       - data-v2-
-      - attach_workspace:
-          at: /home/circleci/data
+      - restore_cache:
+          keys:
+            - data-v2-{{ .Revision }}
+            - data-v2-
       - run:
           name: test1
           command: ls ~/data/ds114_test2_freesurfer
