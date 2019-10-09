@@ -3,7 +3,7 @@ jobs:
   get_data:
     machine:
       image: circleci/classic:201711-01
-    working_directory: ~/data
+    working_directory: /tmp/data
     steps:
       - restore_cache:
           keys:
@@ -12,11 +12,11 @@ jobs:
       - run:
           name: Get ds114_test1
           command: |
-            mkdir -p ~/data
-            if [[ ! -d ~/data/ds114_test1 ]]; then
+            mkdir -p /tmp/data
+            if [[ ! -d /tmp/data/ds114_test1 ]]; then
               wget -c -O ~/ds114_test1.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e54a326c613b01d7d3ed90" && \
-              mkdir -p ~/data && tar xf ~/ds114_test1.tar -C ~/data && \
+              tar xf ~/ds114_test1.tar -C /tmp/data && \
               rm ~/ds114_test1.tar;
             else
               echo "ds114_test1 was cached"
@@ -24,11 +24,11 @@ jobs:
       - run:
           name: Get ds114_test2
           command: |
-            mkdir -p ~/data
-            if [[ ! -d ~/data/ds114_test2 ]]; then
+            mkdir -p /tmp/data
+            if [[ ! -d /tmp/data/ds114_test2 ]]; then
               wget -c -O ~/ds114_test2.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e549f9b83f6901d457d162" && \
-              mkdir -p ~/data && tar xf ~/ds114_test2.tar -C ~/data && \
+              tar xf ~/ds114_test2.tar -C /tmp/data && \
               rm ~/ds114_test2.tar;
             else
               echo "ds114_test2 was cached"
@@ -36,11 +36,11 @@ jobs:
       - run:
           name: Get ds114_test1_freesurfer
           command: |
-            mkdir -p ~/data
-            if [[ ! -d ~/data/ds114_test1_freesurfer ]]; then
+            mkdir -p /tmp/data
+            if [[ ! -d /tmp/data/ds114_test1_freesurfer ]]; then
               wget -c -O ~/ds114_test1_freesurfer.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882adf3b83f6901f564da49" && \
-              mkdir -p ~/data && tar xf ~/ds114_test1_freesurfer.tar -C ~/data && \
+              tar xf ~/ds114_test1_freesurfer.tar -C /tmp/data && \
               rm ~/ds114_test1_freesurfer.tar;
             else
               echo "ds114_test1_freesurfer was cached"
@@ -48,11 +48,11 @@ jobs:
       - run:
           name: Get ds114_test2_freesurfer
           command: |
-            mkdir -p ~/data
-            if [[ ! -d ~/data/ds114_test2_freesurfer ]]; then
+            mkdir -p /tmp/data
+            if [[ ! -d /tmp/data/ds114_test2_freesurfer ]]; then
               wget -c -O ~/ds114_test2_freesurfer.tar \
               "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882b0e3b83f6901fb64da18" && \
-              mkdir -p ~/data && tar xf ~/ds114_test2_freesurfer.tar -C ~/data && \
+              tar xf ~/ds114_test2_freesurfer.tar -C /tmp/data && \
               rm ~/ds114_test2_freesurfer.tar;
             else
               echo "ds114_test2_freesurfer was cached"
@@ -60,7 +60,7 @@ jobs:
       - save_cache:
          key: data-v2-{{ .Revision }}-{{ epoch }}
          paths:
-            - ~/data
+            - /tmp/data
 
   build_test:
     working_directory: ~/wd
