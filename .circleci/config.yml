@@ -65,6 +65,9 @@ jobs:
   build_test:
     docker:
       - image: docker:18.01.0-ce-git
+    environment:
+      - DATADIR: '/tmp/data'
+      - OUTDIR: '/tmp/outputs'
     steps:
       - checkout
       - run:
@@ -124,21 +127,36 @@ jobs:
             - data-v3-{{ .Revision }}
             - data-v3-
       - run:
-          name: test1
-          command: ls /tmp/data/ds114_test2_freesurfer
-      - run:
-          name: Usage BIDS
+          name: Tests: Usage BIDS
           command: docker run -ti --rm ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -h
       - run:
-          name: Usage files
+          name: Tests: Usage files
           command: docker run --rm -ti --entrypoint=run_brain_age_files.py ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -h
       - run:
-          name: Version BIDS
+          name: Tests: Version BIDS
           command: docker run -ti --rm ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -v
       - run:
-          name: Version files
+          name: Tests: Version files
           command: docker run --rm -ti --entrypoint=run_brain_age_files.py ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -v
-
+      - run:
+          name: make output directory
+          command: mkdir -p ${OUTDIR}
+      - run:
+          name: Tests: ds114_test1
+          command: |
+            docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
+            -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
+            -v ${OUTDIR}/ds114_test1:/data/out \
+            ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            /data/in /data/out participant --freesurfer_dir /data/fs \
+            --license_key="~/test.key" &&
+            docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
+            -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
+            -v ${OUTDIR}/ds114_test1:/data/out \
+            ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            /data/in /data/out group --freesurfer_dir /data/fs \
+            --license_key="~/test.key" &&
+            cat ${OUTDIR}/ds114_test1/baracus/00_group/group_predicted_age.tsv
 
 
 workflows:
