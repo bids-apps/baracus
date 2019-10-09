@@ -164,6 +164,9 @@ jobs:
       - store_artifacts:
           path: /tmp/outputs/ds114_test1/baracus
       - run:
+          name: fixme
+          command: sleep 10000
+      - run:
           name: Test 1 ds114_test1 - 3
           command: |
             cat ${OUTDIR}/ds114_test1/baracus/00_group/group_predicted_age.tsv
