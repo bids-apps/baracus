@@ -162,7 +162,7 @@ jobs:
             /data/in /data/out group --freesurfer_dir /data/fs \
             --license_key="~/test.key"
       - store_artifacts:
-          path: ${OUTDIR}/ds114_test1/baracus
+          path: /tmp/outputs/ds114_test1/baracus
       - run:
           name: Test 1 ds114_test1 - 3
           command: |
@@ -190,7 +190,7 @@ jobs:
             /data/in /data/out group --freesurfer_dir /data/fs \
             --license_key="~/test.key"
       - store_artifacts:
-          path: ${OUTDIR}/ds114_test1_models/baracus
+          path: /tmp/outputs/ds114_test1_models/baracus
       - run:
           name: Test 2 models - 3
           command: |
