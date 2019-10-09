@@ -142,7 +142,7 @@ jobs:
           name: make output directory
           command: mkdir -p ${OUTDIR}
 
-      # Tests: ds114_test1
+      # Test 1: ds114_test1
       - run:
           name: Test 1 ds114_test1 - 1
           command: |
@@ -165,6 +165,35 @@ jobs:
           name: Test 1 ds114_test1 - 3
           command: |
             cat ${OUTDIR}/ds114_test1/baracus/00_group/group_predicted_age.tsv
+
+
+      # Test2 : models
+      - run:
+          name: Test 2 models - 1
+          command: |
+            docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
+            -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
+            -v ${OUTDIR}/ds114_test1_models:/data/out \
+            ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            /data/in /data/out participant --freesurfer_dir /data/fs \
+            --license_key="~/test.key" \
+            --models Liem2016__OCI_norm Liem2016__full_2samp_training
+      - run:
+          name: Test 2 models - 2
+          command: |
+            docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
+            -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
+            -v ${OUTDIR}/ds114_test1_models:/data/out \
+            ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            /data/in /data/out group --freesurfer_dir /data/fs \
+            --license_key="~/test.key"
+      - store_artifacts:
+          path: ${OUTDIR}/ds114_test1_models/baracus
+      - run:
+          name: Test 2 models - 3
+          command: |
+            cat ${OUTDIR}/ds114_test1_models/baracus/00_group/group_predicted_age.tsv
+
 
 workflows:
   version: 2
