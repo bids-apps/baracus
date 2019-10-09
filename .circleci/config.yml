@@ -161,6 +161,8 @@ jobs:
             ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
             /data/in /data/out group --freesurfer_dir /data/fs \
             --license_key="~/test.key"
+      - store_artifacts:
+          path: ${OUTDIR}/ds114_test1/baracus
       - run:
           name: Test 1 ds114_test1 - 3
           command: |
