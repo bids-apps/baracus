@@ -7,8 +7,8 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - data-v2-{{ .Revision }}
-            - data-v2-
+            - data-v3-{{ .Revision }}
+            - data-v3-
       - run:
           name: Get ds114_test1
           command: |
@@ -58,12 +58,11 @@ jobs:
               echo "ds114_test2_freesurfer was cached"
             fi
       - save_cache:
-         key: data-v2-{{ .Revision }}-{{ epoch }}
+         key: data-v3-{{ .Revision }}-{{ epoch }}
          paths:
             - /tmp/data
 
   build_test:
-    working_directory: ~/wd
     docker:
       - image: docker:18.01.0-ce-git
     steps:
@@ -122,11 +121,11 @@ jobs:
       # RUN TESTS
       - restore_cache:
           keys:
-            - data-v2-{{ .Revision }}
-            - data-v2-
+            - data-v3-{{ .Revision }}
+            - data-v3-
       - run:
           name: test1
-          command: ls ~/data/ds114_test2_freesurfer
+          command: ls /tmp/data/ds114_test2_freesurfer
       - run:
           name: Usage BIDS
           command: docker run -ti --rm ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -h
