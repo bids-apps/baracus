@@ -128,9 +128,9 @@ jobs:
               echo "ds114_test2_freesurfer was cached"
             fi
       - persist_to_workspace:
-          root: ~
+          root: /home/circleci
           paths:
-            - data
+            - data/
       - save_cache:
          key: data-v2-{{ .Revision }}-{{ epoch }}
          paths:
