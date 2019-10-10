@@ -73,10 +73,10 @@ jobs:
             apk add --no-cache pigz
       - restore_cache:
           keys:
-            - docker-v1-{{ .Branch }}-{{ .Revision }}
-            - docker-v1-{{ .Branch }}-
-            - docker-v1-master-
-            - docker-v1-
+            - docker-v2-{{ .Branch }}-{{ .Revision }}
+            - docker-v2-{{ .Branch }}-
+            - docker-v2-master-
+            - docker-v2-
           paths:
             - /tmp/cache/docker.tar.gz
       - setup_remote_docker
@@ -115,7 +115,7 @@ jobs:
             docker save bids/${CIRCLE_PROJECT_REPONAME}:latest \
               | pigz -2 -p 3 > /tmp/cache/docker.tar.gz
       - save_cache:
-           key: docker-v1-{{ .Branch }}-{{ epoch }}
+           key: docker-v2-{{ .Branch }}-{{ epoch }}
            paths:
              - /tmp/cache/docker.tar.gz
       # Usage and version
@@ -149,10 +149,10 @@ jobs:
             sudo apt-get update && sudo apt-get install -y pigz
       - restore_cache:
           keys:
-            - docker-v1-{{ .Branch }}-{{ .Revision }}
-            - docker-v1-{{ .Branch }}-
-            - docker-v1-master-
-            - docker-v1-
+            - docker-v2-{{ .Branch }}-{{ .Revision }}
+            - docker-v2-{{ .Branch }}-
+            - docker-v2-master-
+            - docker-v2-
           paths:
             - /tmp/cache/docker.tar.gz
       - restore_cache:
@@ -282,10 +282,10 @@ jobs:
             sudo apt-get update && sudo apt-get install -y pigz
       - restore_cache:
           keys:
-            - docker-v1-{{ .Branch }}-{{ .Revision }}
-            - docker-v1-{{ .Branch }}-
-            - docker-v1-master-
-            - docker-v1-
+            - docker-v2-{{ .Branch }}-{{ .Revision }}
+            - docker-v2-{{ .Branch }}-
+            - docker-v2-master-
+            - docker-v2-
           paths:
             - /tmp/cache/docker.tar.gz
 
