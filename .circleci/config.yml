@@ -140,10 +140,6 @@ jobs:
       - DATADIR: '/tmp/data'
       - OUTDIR: '/tmp/outputs'
     steps:
-      - run:
-          name: Install parallel gzip
-          command: |
-            apk add --no-cache pigz
       - restore_cache:
           keys:
             - docker-v1-{{ .Branch }}-{{ .Revision }}
@@ -159,12 +155,11 @@ jobs:
 
       # Load Docker
       - run:
-          name: Load Docker image layer cache
+          name: Load Docker
           no_output_timeout: 30m
           command: |
             docker info
-            set +o pipefail
-            pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
+            docker load -i /tmp/cache/docker.tar.gz
             docker images
 
       - run:
