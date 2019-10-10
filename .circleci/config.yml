@@ -140,6 +140,10 @@ jobs:
       - DATADIR: '/tmp/data'
       - OUTDIR: '/tmp/outputs'
     steps:
+      - run:
+          name: Install parallel gzip
+          command: |
+            sudo apt-get update && sudo apt-get install -y pigz
       - restore_cache:
           keys:
             - docker-v1-{{ .Branch }}-{{ .Revision }}
@@ -159,7 +163,8 @@ jobs:
           no_output_timeout: 30m
           command: |
             docker info
-            docker load -i /tmp/cache/docker.tar.gz
+            set +o pipefail
+            pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
             docker images
 
       - run:
