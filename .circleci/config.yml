@@ -103,8 +103,8 @@ jobs:
           command: |
             docker images
             set +o pipefail
-            docker build --cache-from=${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} \
-            -t ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest .
+            docker build --cache-from=bids/${CIRCLE_PROJECT_REPONAME} \
+            -t bids/${CIRCLE_PROJECT_REPONAME}:latest .
             docker images
       - run:
           name: Docker save
@@ -112,7 +112,7 @@ jobs:
           command: |
             mkdir -p /tmp/cache
             set +o pipefail
-            docker save ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            docker save bids/${CIRCLE_PROJECT_REPONAME}:latest \
               | pigz -2 -p 3 > /tmp/cache/docker.tar.gz
       - save_cache:
            key: docker-v1-{{ .Branch }}-{{ epoch }}
@@ -121,19 +121,19 @@ jobs:
       # Usage and version
       - run:
           name: Usage BIDS
-          command: docker run -ti --rm ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -h
+          command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME}:latest -h
       - run:
           name: Usage files
-          command: docker run --rm -ti --entrypoint=run_brain_age_files.py ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -h
+          command: docker run --rm -ti --entrypoint=run_brain_age_files.py bids/${CIRCLE_PROJECT_REPONAME}:latest -h
       - run:
           name: Version BIDS
-          command: docker run -ti --rm ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -v
+          command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME}:latest -v
       - run:
           name: Version files
-          command: docker run --rm -ti --entrypoint=run_brain_age_files.py ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -v
+          command: docker run --rm -ti --entrypoint=run_brain_age_files.py bids/${CIRCLE_PROJECT_REPONAME}:latest -v
       - run:
           name: Python packages
-          command: docker run --rm -ti --entrypoint=/bin/bash ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -c "pip freeze"
+          command: docker run --rm -ti --entrypoint=/bin/bash bids/${CIRCLE_PROJECT_REPONAME}:latest -c "pip freeze"
 
   test:
     machine:
@@ -181,7 +181,7 @@ jobs:
             docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
             -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
             -v ${OUTDIR}/ds114_test1:/data/out \
-            ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
             /data/in /data/out participant --freesurfer_dir /data/fs \
             --license_key="~/test.key"
       - run:
@@ -190,7 +190,7 @@ jobs:
             docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
             -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
             -v ${OUTDIR}/ds114_test1:/data/out \
-            ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
             /data/in /data/out group --freesurfer_dir /data/fs \
             --license_key="~/test.key"
       - run:
@@ -206,7 +206,7 @@ jobs:
             docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
             -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
             -v ${OUTDIR}/ds114_test1_models:/data/out \
-            ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
             /data/in /data/out participant --freesurfer_dir /data/fs \
             --license_key="~/test.key" \
             --models Liem2016__OCI_norm Liem2016__full_2samp_training
@@ -216,7 +216,7 @@ jobs:
             docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
             -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
             -v ${OUTDIR}/ds114_test1_models:/data/out \
-            ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
             /data/in /data/out group --freesurfer_dir /data/fs \
             --license_key="~/test.key"
       - run:
@@ -232,7 +232,7 @@ jobs:
             -v ${OUTDIR}/ds114_test1/baracus/sub-01/data/:/data/in \
             -v ${OUTDIR}/ds114_test1_file_mode:/data/out \
             --entrypoint=run_brain_age_files.py \
-            ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
             /data/out \
             --lh_thickness_file /data/in/lh.thickness.mgh \
             --rh_thickness_file /data/in/rh.thickness.mgh \
@@ -252,7 +252,7 @@ jobs:
             docker run --rm -ti -v ${DATADIR}/ds114_test2:/data/in \
             -v ${DATADIR}/ds114_test2_freesurfer:/data/fs \
             -v ${OUTDIR}/ds114_test2:/data/out \
-            ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
             /data/in /data/out participant --freesurfer_dir /data/fs \
             --license_key="~/test.key"
       - run:
@@ -261,7 +261,7 @@ jobs:
             docker run --rm -ti -v ${DATADIR}/ds114_test2:/data/in \
             -v ${DATADIR}/ds114_test2_freesurfer:/data/fs \
             -v ${OUTDIR}/ds114_test2:/data/out \
-            ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
             /data/in /data/out group --freesurfer_dir /data/fs \
             --license_key="~/test.key"
       - run:
@@ -304,12 +304,11 @@ jobs:
           command: |
             if [[ -n "$DOCKER_PASS" ]]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker tag ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} bids/${CIRCLE_PROJECT_REPONAME}:unstable
+              docker tag bids/${CIRCLE_PROJECT_REPONAME} bids/${CIRCLE_PROJECT_REPONAME}:unstable
               docker push bids/${CIRCLE_PROJECT_REPONAME}:unstable
               if [[ -n "$CIRCLE_TAG" ]]; then
-                docker tag ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest bids/${CIRCLE_PROJECT_REPONAME}:latest
                 docker push bids/${CIRCLE_PROJECT_REPONAME}:latest
-                docker tag ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} bids/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG
+                docker tag bids/${CIRCLE_PROJECT_REPONAME} bids/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG
                 docker push bids/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG
               fi
             fi
