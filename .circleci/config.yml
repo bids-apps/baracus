@@ -229,8 +229,7 @@ jobs:
           name: Test 3 file mode - 1
           command: |
             docker run --rm -ti \
-            -v ${DATADIR}/ds114_test1/baracus/sub-01/data/:/data/in \
-            -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
+            -v ${OUTDIR}/ds114_test1/baracus/sub-01/data/:/data/in \
             -v ${OUTDIR}/ds114_test1_file_mode:/data/out \
             --entrypoint=run_brain_age_files.py \
             ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
