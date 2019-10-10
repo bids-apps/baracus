@@ -232,7 +232,7 @@ jobs:
             -v ${DATADIR}/ds114_test1/baracus/sub-01/data/:/data/in \
             -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
             -v ${OUTDIR}/ds114_test1_file_mode:/data/out \
-            --entrypoint=run_brain_age_files.py
+            --entrypoint=run_brain_age_files.py \
             ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest \
             /data/out \
             --lh_thickness_file /data/in/lh.thickness.mgh \
@@ -273,6 +273,48 @@ jobs:
       - store_artifacts:
           path: /tmp/outputs/
 
+  deploy:
+    machine:
+      image: circleci/classic:201711-01
+    steps:
+      - run:
+          name: Install parallel gzip
+          command: |
+            sudo apt-get update && sudo apt-get install -y pigz
+      - restore_cache:
+          keys:
+            - docker-v1-{{ .Branch }}-{{ .Revision }}
+            - docker-v1-{{ .Branch }}-
+            - docker-v1-master-
+            - docker-v1-
+          paths:
+            - /tmp/cache/docker.tar.gz
+
+      # Load Docker
+      - run:
+          name: Load Docker
+          no_output_timeout: 30m
+          command: |
+            docker info
+            set +o pipefail
+            pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
+            docker images
+      - run:
+          name: Deploy to Docker Hub
+          no_output_timeout: 40m
+          #fixme change ${CIRCLE_PROJECT_USERNAME} to bids
+          command: |
+            if [[ -n "$DOCKER_PASS" ]]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker tag ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:unstable
+              docker push ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:unstable
+              if [[ -n "$CIRCLE_TAG" ]]; then
+                docker push ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest
+                docker tag ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG
+                docker push ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG
+              fi
+            fi
+
 workflows:
   version: 2
   build_test_deploy:
@@ -290,5 +332,13 @@ workflows:
             - get_data
             - build
           filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
             tags:
               only: /.*/
