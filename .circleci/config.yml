@@ -62,12 +62,9 @@ jobs:
          paths:
             - /tmp/data
 
-  build_test:
+  build:
     docker:
       - image: docker:18.01.0-ce-git
-    environment:
-      - DATADIR: '/tmp/data'
-      - OUTDIR: '/tmp/outputs'
     steps:
       - checkout
       - run:
@@ -121,11 +118,7 @@ jobs:
            key: docker-v1-{{ .Branch }}-{{ epoch }}
            paths:
              - /tmp/cache/docker.tar.gz
-      # RUN TESTS
-      - restore_cache:
-          keys:
-            - data-v3-{{ .Revision }}
-            - data-v3-
+      # Usage and version
       - run:
           name: Usage BIDS
           command: docker run -ti --rm ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -h
@@ -138,6 +131,42 @@ jobs:
       - run:
           name: Version files
           command: docker run --rm -ti --entrypoint=run_brain_age_files.py ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -v
+
+  test:
+    machine:
+      image: circleci/classic:201711-01
+    working_directory: /tmp/data
+    environment:
+      - DATADIR: '/tmp/data'
+      - OUTDIR: '/tmp/outputs'
+    steps:
+      - run:
+          name: Install parallel gzip
+          command: |
+            apk add --no-cache pigz
+      - restore_cache:
+          keys:
+            - docker-v1-{{ .Branch }}-{{ .Revision }}
+            - docker-v1-{{ .Branch }}-
+            - docker-v1-master-
+            - docker-v1-
+          paths:
+            - /tmp/cache/docker.tar.gz
+      - restore_cache:
+          keys:
+            - data-v3-{{ .Revision }}
+            - data-v3-
+
+      # Load Docker
+      - run:
+          name: Load Docker image layer cache
+          no_output_timeout: 30m
+          command: |
+            docker info
+            set +o pipefail
+            pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
+            docker images
+
       - run:
           name: make output directory
           command: mkdir -p ${OUTDIR}
@@ -205,9 +234,14 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - build_test:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - test:
           requires:
             - get_data
+            - build
           filters:
             tags:
               only: /.*/
