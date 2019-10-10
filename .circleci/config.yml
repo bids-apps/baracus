@@ -301,7 +301,7 @@ jobs:
       - run:
           name: Deploy to Docker Hub
           no_output_timeout: 40m
-          #fixme change ${CIRCLE_PROJECT_USERNAME} to bids
+          #fixme change target tag from ${CIRCLE_PROJECT_USERNAME} to bids
           command: |
             if [[ -n "$DOCKER_PASS" ]]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
