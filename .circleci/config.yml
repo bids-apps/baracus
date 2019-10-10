@@ -131,6 +131,9 @@ jobs:
       - run:
           name: Version files
           command: docker run --rm -ti --entrypoint=run_brain_age_files.py ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -v
+      - run:
+          name: Python packages
+          command: docker run --rm -ti --entrypoint=/bin/bash ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:latest -c "pip freeze"
 
   test:
     machine:
