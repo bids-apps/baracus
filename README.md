@@ -139,6 +139,8 @@ previously processed data:
                             found, recon-all will be run. If not specified
                             freesurfer data will be saved to {out_dir}/freesurfer
       --models {Liem2016__OCI_norm,Liem2016__full_2samp_training} [{Liem2016__OCI_norm,Liem2016__full_2samp_training} ...]
+      --skip_missing
+                            Flag to skip not segmented subjects
       --license_key LICENSE_KEY
                             FreeSurfer license key - letters and numbers after "*"
                             in the email you received after registration. To

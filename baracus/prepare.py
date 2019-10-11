@@ -18,10 +18,11 @@ def downsample_surfs(fs_dir, out_dir, subject, hemis=["lh", "rh"], meas=["thickn
                 os.makedirs(subject_dir)
             out_file = os.path.join(subject_dir, "{h}.{m}.mgh".format(h=h, m=m))
             out_files[h + "_" + m + "_file"] = out_file
-
-            cmd = "mris_preproc --s {subject} --target fsaverage4 --hemi {h} " \
-                  "--meas {m} --out {out_file}".format(subject=subject, h=h, m=m, out_file=out_file)
-            run(cmd, env={"SUBJECTS_DIR": fs_dir})
+            if not os.path.isfile(out_file):
+                cmd = "mris_preproc --s {subject} --target fsaverage4 --hemi {h} " \
+                    "--meas {m} --out {out_file}".format(
+                        subject=subject, h=h, m=m, out_file=out_file)
+                run(cmd, env={"SUBJECTS_DIR": fs_dir})
     return out_files
 
 
@@ -30,14 +31,16 @@ def prepare_aseg(fs_dir, out_dir, subject):
     if not os.path.isdir(subject_dir):
         os.makedirs(subject_dir)
     out_file = os.path.join(subject_dir, "aseg")
-    cmd = "asegstats2table --subjects {subject} --meas volume --tablefile {out_file}".format(subject=subject,
-                                                                                             out_file=out_file)
-    print(cmd)
-    run(cmd, env={"SUBJECTS_DIR": fs_dir})
+    if not os.path.isfile(out_file):
+        cmd = "asegstats2table --subjects {subject} --meas volume --tablefile {out_file}".format(subject=subject,
+                                                                                                 out_file=out_file)
+        print(cmd)
+        run(cmd, env={"SUBJECTS_DIR": fs_dir})
     return out_file
 
 
-def run_prepare_all(bids_dir, freesurfer_dir, out_dir, subjects_to_analyze, sessions_to_analyze, n_cpus, license_key):
+def run_prepare_all(bids_dir, freesurfer_dir, out_dir, subjects_to_analyze, sessions_to_analyze, n_cpus, license_key,
+                    skip_missing=False):
     """
 
     :param bids_dir:
@@ -58,7 +61,7 @@ def run_prepare_all(bids_dir, freesurfer_dir, out_dir, subjects_to_analyze, sess
     for subject in subjects_to_analyze:
         sessions = sessions_to_analyze.get(subject)
         freesurfer_subjects.extend(run_fs_if_not_available(bids_dir, freesurfer_dir, subject, license_key, n_cpus,
-                                                       sessions))
+                                                       sessions, skip_missing))
 
     # downsample surfaces to fsaverage4 and extract subcortical data from aseg
     out_files = {}

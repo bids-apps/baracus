@@ -19,7 +19,7 @@ def run(command, env={}, ignore_errors=False):
         raise Exception("Non zero return code: %d" % process.returncode)
 
 
-def run_fs_if_not_available(bids_dir, freesurfer_dir, subject_label, license_key, n_cpus, sessions=[]):
+def run_fs_if_not_available(bids_dir, freesurfer_dir, subject_label, license_key, n_cpus, sessions=[], skip_missing=False):
     freesurfer_subjects = []
     if sessions:
         # long
@@ -32,21 +32,28 @@ def run_fs_if_not_available(bids_dir, freesurfer_dir, subject_label, license_key
     fs_missing = False
     for fss in freesurfer_subjects:
         if not os.path.exists(os.path.join(freesurfer_dir, fss, "scripts/recon-all.done")):
-            fs_missing = True
+            if skip_missing:
+                freesurfer_subjects.remove(fss)
+            else:
+                fs_missing = True
 
-        if fs_missing:
-            cmd = "run_freesurfer.py {in_dir} {out_dir} participant " \
-                  "--hires_mode disable " \
-                  "--participant_label {subject_label} " \
-                  "--license_key {license_key} " \
-                  "--n_cpus {n_cpus} --steps cross-sectional".format(in_dir=bids_dir,
-                                                                     out_dir=freesurfer_dir,
-                                                                     subject_label=subject_label,
-                                                                     license_key=license_key,
-                                                                     n_cpus=n_cpus)
+    if fs_missing:
+        cmd = "run_freesurfer.py {in_dir} {out_dir} participant " \
+              "--hires_mode disable " \
+              "--participant_label {subject_label} " \
+              "--license_key {license_key} " \
+              "--n_cpus {n_cpus} --steps cross-sectional".format(in_dir=bids_dir,
+                                                                 out_dir=freesurfer_dir,
+                                                                 subject_label=subject_label,
+                                                                 license_key=license_key,
+                                                                 n_cpus=n_cpus)
 
-            print("Freesurfer for {} not found. Running recon-all: {}".format(subject_label, cmd))
-            run(cmd)
+        print("Freesurfer for {} not found. Running recon-all: {}".format(subject_label, cmd))
+        run(cmd)
+
+    for fss in freesurfer_subjects:
+        if not os.path.isfile(os.path.join(freesurfer_dir, fss, "stats/aseg.stats")):
+            freesurfer_subjects.remove(fss)
     return freesurfer_subjects
 
 
