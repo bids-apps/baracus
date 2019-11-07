@@ -89,6 +89,8 @@ if __name__ == "__main__":
             in_file = os.path.join(out_dir, subject, subject + "_predicted_age.tsv")
             if os.path.isfile(in_file):
                 df = df.append(pd.read_csv(in_file, sep="\t"))
+            elif not args.skip_missing:
+                raise FileNotFoundError(in_file)
 
         group_out_dir = os.path.join(out_dir, "00_group")
         if not os.path.isdir(group_out_dir):

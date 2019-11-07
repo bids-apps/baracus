@@ -52,8 +52,12 @@ def run_fs_if_not_available(bids_dir, freesurfer_dir, subject_label, license_key
         run(cmd)
 
     for fss in freesurfer_subjects:
-        if not os.path.isfile(os.path.join(freesurfer_dir, fss, "stats/aseg.stats")):
-            freesurfer_subjects.remove(fss)
+        aseg_file = os.path.join(freesurfer_dir, fss, "stats/aseg.stats")
+        if not os.path.isfile(aseg_file):
+            if skip_missing:
+                freesurfer_subjects.remove(fss)
+            else:
+                raise FileNotFoundError(aseg_file)
     return freesurfer_subjects
 
 

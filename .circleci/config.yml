@@ -287,7 +287,7 @@ jobs:
             -v ${OUTDIR}/ds114_test1_missing:/data/out \
             bids/${CIRCLE_PROJECT_REPONAME}:latest \
             /data/in /data/out participant --freesurfer_dir /data/fs \
-            --license_key="~/test.key --skip_missing"
+            --license_key="~/test.key" --skip_missing
       - run:
           name: Test 5 skip_missing - 2
           command: |
@@ -296,7 +296,7 @@ jobs:
             -v ${OUTDIR}/ds114_test1_missing:/data/out \
             bids/${CIRCLE_PROJECT_REPONAME}:latest \
             /data/in /data/out group --freesurfer_dir /data/fs \
-            --license_key="~/test.key"
+            --license_key="~/test.key" --skip_missing
       - run:
           name: Test 5 skip_missing - 3
           command: |
