@@ -57,6 +57,15 @@ jobs:
             else
               echo "ds114_test2_freesurfer was cached"
             fi
+      - run:
+          name: Create a FreeSurfer folder with subject 02 missing
+          command: |
+            if [[ ! -d /tmp/data/ds114_test1_freesurfer_missing ]]; then
+              mkdir /tmp/data/ds114_test1_freesurfer_missing
+              cp -R /tmp/data/ds114_test1_freesurfer/sub-01 /tmp/data/ds114_test1_freesurfer_missing
+            else
+              echo "ds114_test1_freesurfer_missing was cached"
+            fi
       - save_cache:
          key: data-v3-{{ .Revision }}-{{ epoch }}
          paths:
@@ -268,6 +277,31 @@ jobs:
           name: Test 1 ds114_test2 - 3
           command: |
             cat ${OUTDIR}/ds114_test2/baracus/00_group/group_predicted_age.tsv
+
+      # Test 5: skip_missing
+      - run:
+          name: Test 5 skip_missing - 1
+          command: |
+            docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
+            -v ${DATADIR}/ds114_test1_freesurfer_missing:/data/fs \
+            -v ${OUTDIR}/ds114_test1_missing:/data/out \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+            /data/in /data/out participant --freesurfer_dir /data/fs \
+            --license_key="~/test.key" --skip_missing
+      - run:
+          name: Test 5 skip_missing - 2
+          command: |
+            docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
+            -v ${DATADIR}/ds114_test1_freesurfer_missing:/data/fs \
+            -v ${OUTDIR}/ds114_test1_missing:/data/out \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+            /data/in /data/out group --freesurfer_dir /data/fs \
+            --license_key="~/test.key" --skip_missing
+      - run:
+          name: Test 5 skip_missing - 3
+          command: |
+            cat ${OUTDIR}/ds114_test1_missing/baracus/00_group/group_predicted_age.tsv
+
 
       - store_artifacts:
           path: /tmp/outputs/

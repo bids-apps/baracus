@@ -38,6 +38,7 @@ if __name__ == "__main__":
                                                  "out_dir}/freesurfer")
     parser.add_argument('--models', choices=models_list, default=["Liem2016__OCI_norm"], help='',
                         nargs="+")
+    parser.add_argument('--skip_missing', help='Flag to skip not segmented subjects', action='store_true')
     parser.add_argument('--license_key',
                         help='FreeSurfer license key - letters and numbers after "*" in the email you '
                              'received after registration. To register (for free) visit '
@@ -72,7 +73,7 @@ if __name__ == "__main__":
     if args.analysis_level == "participant":
 
         data_files = run_prepare_all(args.bids_dir, freesurfer_dir, out_dir, subjects_to_analyze,
-                                     sessions_to_analyze, args.n_cpus, args.license_key)
+                                     sessions_to_analyze, args.n_cpus, args.license_key, args.skip_missing)
 
         for subject, d in data_files.items():
             d["out_dir"] = out_dir
@@ -86,7 +87,10 @@ if __name__ == "__main__":
         df = pd.DataFrame([])
         for subject in freesurfer_subjects_to_analyze:
             in_file = os.path.join(out_dir, subject, subject + "_predicted_age.tsv")
-            df = df.append(pd.read_csv(in_file, sep="\t"))
+            if os.path.isfile(in_file):
+                df = df.append(pd.read_csv(in_file, sep="\t"))
+            elif not args.skip_missing:
+                raise FileNotFoundError(in_file)
 
         group_out_dir = os.path.join(out_dir, "00_group")
         if not os.path.isdir(group_out_dir):
