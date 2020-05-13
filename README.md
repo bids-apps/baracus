@@ -52,6 +52,8 @@ objective cognitive impairment (OCI) (*full LIFE 2sample training* in Liem et al
 Sample: N = 2377, 1133f/1244m, age: M=58.4, SD=15.4, 18-83y;
 containing data from the LIFE and NKI studies.
 
+Models were trained as part of Liem et al. (2017) and the training code is available
+[here](https://github.com/fliem/LeiCA_LIFE).
 
 ## Modes
 It can be run in **BIDS mode** (recommended) and in in **FILE mode**.
