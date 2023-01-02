@@ -55,5 +55,3 @@ bids/baracus:${sw_version} \
 cmd3="tar -zcvf ${wd}/results_baracus_${sw_version}_${ds_name}${suf}.tar.gz ${out_dir}"
 
 echo $cmd1 && $cmd1 && echo $cmd2 && $cmd2 && echo $cmd3 && $cmd3
-
-
