@@ -83,7 +83,7 @@ jobs:
     - run:
         name: Install parallel gzip
         command: |
-          sudo apt-get update --qq && sudo apt-get install -q -y pigz
+          sudo apt-get update && sudo apt-get install -q -y pigz
     - restore_cache:
         keys:
         - docker-v2-{{ .Branch }}-{{ .Revision }}
