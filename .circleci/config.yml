@@ -3,7 +3,7 @@ version: 2
 jobs:
   get_data:
     machine:
-      image: circleci/classic:201711-01
+      image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
     steps:
     - restore_cache:
@@ -72,23 +72,24 @@ jobs:
         paths:
         - /tmp/data
 
+
   build:
-    docker:
-    - image: docker:18.01.0-ce-git
+    machine:
+      image: ubuntu-2204:2022.10.2
+
     steps:
     - checkout
+
     - run:
         name: Install parallel gzip
         command: |
-          apk add --no-cache pigz
+          sudo apt-get update --qq && sudo apt-get install -q -y pigz
     - restore_cache:
         keys:
         - docker-v2-{{ .Branch }}-{{ .Revision }}
         - docker-v2-{{ .Branch }}-
         - docker-v2-master-
         - docker-v2-
-        paths:
-        - /tmp/cache/docker.tar.gz
 
     - run:
         name: Load Docker image layer cache
@@ -147,7 +148,7 @@ jobs:
 
   test:
     machine:
-      image: circleci/classic:201711-01
+      image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
     environment:
     - DATADIR: /tmp/data
@@ -170,7 +171,6 @@ jobs:
         - data-v3-{{ .Revision }}
         - data-v3-
 
-        # Load Docker
     - run:
         name: Load Docker
         no_output_timeout: 30m
@@ -184,50 +184,48 @@ jobs:
         name: make output directory
         command: mkdir -p ${OUTDIR}
 
-        # Test 1: ds114_test1
     - run:
         name: Test 1 ds114_test1 - 1
         command: |
           docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
           -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
           -v ${OUTDIR}/ds114_test1:/data/out \
-          bids/${CIRCLE_PROJECT_REPONAME}:latest \
-          /data/in /data/out participant --freesurfer_dir /data/fs \
-          --license_key="~/test.key"
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /data/in /data/out participant --freesurfer_dir /data/fs \
+              --license_key="~/test.key"
     - run:
         name: Test 1 ds114_test1 - 2
         command: |
           docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
           -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
           -v ${OUTDIR}/ds114_test1:/data/out \
-          bids/${CIRCLE_PROJECT_REPONAME}:latest \
-          /data/in /data/out group --freesurfer_dir /data/fs \
-          --license_key="~/test.key"
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /data/in /data/out group --freesurfer_dir /data/fs \
+              --license_key="~/test.key"
     - run:
         name: Test 1 ds114_test1 - 3
         command: |
           cat ${OUTDIR}/ds114_test1/baracus/00_group/group_predicted_age.tsv
 
-        # Test2 : models
     - run:
         name: Test 2 models - 1
         command: |
           docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
           -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
           -v ${OUTDIR}/ds114_test1_models:/data/out \
-          bids/${CIRCLE_PROJECT_REPONAME}:latest \
-          /data/in /data/out participant --freesurfer_dir /data/fs \
-          --license_key="~/test.key" \
-          --models Liem2016__OCI_norm Liem2016__full_2samp_training
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /data/in /data/out participant --freesurfer_dir /data/fs \
+              --license_key="~/test.key" \
+              --models Liem2016__OCI_norm Liem2016__full_2samp_training
     - run:
         name: Test 2 models - 2
         command: |
           docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
           -v ${DATADIR}/ds114_test1_freesurfer:/data/fs \
           -v ${OUTDIR}/ds114_test1_models:/data/out \
-          bids/${CIRCLE_PROJECT_REPONAME}:latest \
-          /data/in /data/out group --freesurfer_dir /data/fs \
-          --license_key="~/test.key"
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /data/in /data/out group --freesurfer_dir /data/fs \
+              --license_key="~/test.key"
     - run:
         name: Test 2 models - 3
         command: |
@@ -241,13 +239,13 @@ jobs:
           -v ${OUTDIR}/ds114_test1/baracus/sub-01/data/:/data/in \
           -v ${OUTDIR}/ds114_test1_file_mode:/data/out \
           --entrypoint=run_brain_age_files.py \
-          bids/${CIRCLE_PROJECT_REPONAME}:latest \
-          /data/out \
-          --lh_thickness_file /data/in/lh.thickness.mgh \
-          --rh_thickness_file /data/in/rh.thickness.mgh \
-          --lh_area_file /data/in/lh.area.mgh \
-          --rh_area_file /data/in/rh.area.mgh \
-          --aseg_file /data/in/aseg --participant_label sub-01
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /data/out \
+              --lh_thickness_file /data/in/lh.thickness.mgh \
+              --rh_thickness_file /data/in/rh.thickness.mgh \
+              --lh_area_file /data/in/lh.area.mgh \
+              --rh_area_file /data/in/rh.area.mgh \
+              --aseg_file /data/in/aseg --participant_label sub-01
     - run:
         name: Test 3 file mode - 2
         command: |
@@ -260,18 +258,18 @@ jobs:
           docker run --rm -ti -v ${DATADIR}/ds114_test2:/data/in \
           -v ${DATADIR}/ds114_test2_freesurfer:/data/fs \
           -v ${OUTDIR}/ds114_test2:/data/out \
-          bids/${CIRCLE_PROJECT_REPONAME}:latest \
-          /data/in /data/out participant --freesurfer_dir /data/fs \
-          --license_key="~/test.key"
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /data/in /data/out participant --freesurfer_dir /data/fs \
+              --license_key="~/test.key"
     - run:
         name: Test 1 ds114_test2 - 2
         command: |
           docker run --rm -ti -v ${DATADIR}/ds114_test2:/data/in \
           -v ${DATADIR}/ds114_test2_freesurfer:/data/fs \
           -v ${OUTDIR}/ds114_test2:/data/out \
-          bids/${CIRCLE_PROJECT_REPONAME}:latest \
-          /data/in /data/out group --freesurfer_dir /data/fs \
-          --license_key="~/test.key"
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /data/in /data/out group --freesurfer_dir /data/fs \
+              --license_key="~/test.key"
     - run:
         name: Test 1 ds114_test2 - 3
         command: |
@@ -284,18 +282,18 @@ jobs:
           docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
           -v ${DATADIR}/ds114_test1_freesurfer_missing:/data/fs \
           -v ${OUTDIR}/ds114_test1_missing:/data/out \
-          bids/${CIRCLE_PROJECT_REPONAME}:latest \
-          /data/in /data/out participant --freesurfer_dir /data/fs \
-          --license_key="~/test.key" --skip_missing
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /data/in /data/out participant --freesurfer_dir /data/fs \
+              --license_key="~/test.key" --skip_missing
     - run:
         name: Test 5 skip_missing - 2
         command: |
           docker run --rm -ti -v ${DATADIR}/ds114_test1:/data/in \
           -v ${DATADIR}/ds114_test1_freesurfer_missing:/data/fs \
           -v ${OUTDIR}/ds114_test1_missing:/data/out \
-          bids/${CIRCLE_PROJECT_REPONAME}:latest \
-          /data/in /data/out group --freesurfer_dir /data/fs \
-          --license_key="~/test.key" --skip_missing
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /data/in /data/out group --freesurfer_dir /data/fs \
+              --license_key="~/test.key" --skip_missing
     - run:
         name: Test 5 skip_missing - 3
         command: |
@@ -318,10 +316,7 @@ jobs:
         - docker-v2-{{ .Branch }}-
         - docker-v2-master-
         - docker-v2-
-        paths:
-        - /tmp/cache/docker.tar.gz
 
-        # Load Docker
     - run:
         name: Load Docker
         no_output_timeout: 30m
@@ -372,3 +367,5 @@ workflows:
             only: master
           tags:
             only: /.*/
+
+# VS Code Extension Version: 1.5.1

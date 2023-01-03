@@ -1,7 +1,8 @@
-FROM bids/base_validator:latest
+FROM bids/base_validator
 
 RUN apt-get update \
-    && apt-get install -y wget tcsh
+    && apt-get install --no-install-recommends -y wget tcsh && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN wget -qO- https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/5.3.0/freesurfer-Linux-centos6_x86_64-stable-pub-v5.3.0.tar.gz | tar zxv -C /opt \
   --exclude='freesurfer/trctrain' \
@@ -16,7 +17,6 @@ RUN wget -qO- https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/5.3.0/frees
   --exclude='freesurfer/average/mult-comp-cor' \
   --exclude='freesurfer/lib/cuda' \
   --exclude='freesurfer/lib/qt'
-
 
 RUN /bin/bash -c 'touch /opt/freesurfer/.license'
 
@@ -37,35 +37,45 @@ ENV PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
 ENV MNI_PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
 ENV PATH=/opt/freesurfer/bin:/opt/freesurfer/fsfast/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 
-RUN sudo apt-get update && apt-get install -y tree htop unzip
-RUN sudo apt-get update && apt-get install -y tcsh
-RUN sudo apt-get update && apt-get install -y bc
-RUN sudo apt-get update && apt-get install -y tar libgomp1 perl-modules
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends \
+            tree \
+            htop  \
+            unzip \
+            tcsh \
+            bc \
+            tar \
+            libgomp1 \
+            perl-modules && \
+    rm -rf /var/lib/apt/lists/*
 
 # make freesurfer python scripts python3 ready
-RUN 2to3-3.4 -w $FREESURFER_HOME/bin/aparcstats2table
-RUN 2to3-3.4 -w $FREESURFER_HOME/bin/asegstats2table
-RUN 2to3-3.4 -w $FREESURFER_HOME/bin/*.py
+RUN 2to3-3.4 -w $FREESURFER_HOME/bin/aparcstats2table && \
+    2to3-3.4 -w $FREESURFER_HOME/bin/asegstats2table && \
+    2to3-3.4 -w $FREESURFER_HOME/bin/*.py
 
 # download models
-RUN mkdir /code
-RUN wget -qO models.zip https://www.dropbox.com/s/5xbqw8i2e7x0g02/models.zip?dl=0 && \
-unzip models.zip && mv models /code/ && rm models.zip
+RUN mkdir /code && \
+    wget --progress=dot:giga -qO models.zip https://www.dropbox.com/s/5xbqw8i2e7x0g02/models.zip?dl=0 && \
+    unzip models.zip && \
+    mv models /code/ && \
+    rm models.zip
 
 # freesurfer repo
-RUN wget https://github.com/bids-apps/freesurfer/archive/v6.0.0-5.tar.gz && \
-tar xfz v6.0.0-5.tar.gz && rm -r v6.0.0-5.tar.gz && \
-cd freesurfer-6.0.0-5 && mv run.py /code/run_freesurfer.py
+RUN wget --progress=dot:giga https://github.com/bids-apps/freesurfer/archive/v6.0.0-5.tar.gz && \
+    tar xfz v6.0.0-5.tar.gz && \
+    rm -r v6.0.0-5.tar.gz && \
+    cd freesurfer-6.0.0-5 && \
+    mv run.py /code/run_freesurfer.py
 # since we are using freesurfer-bids-app-run-code from FS6 and we run it with FS5.3,
 # we need to remove the parallel flag of recon-all
-RUN sed -e "s/-parallel //g" -i /code/run_freesurfer.py
-RUN echo "FS5.3_BIDSAPPv6.0.0-5" > /code/version
+RUN sed -e "s/-parallel //g" -i /code/run_freesurfer.py && \
+    echo "FS5.3_BIDSAPPv6.0.0-5" > /code/version
 ENV PATH=/code:$PATH
-
 
 # Install anaconda
 RUN echo 'export PATH=/usr/local/anaconda:$PATH' > /etc/profile.d/conda.sh && \
-    wget --quiet https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh -O anaconda.sh && \
+    wget --progress=dot:giga https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh -O anaconda.sh && \
     /bin/bash anaconda.sh -b -p /usr/local/anaconda && \
     rm anaconda.sh
 
@@ -76,15 +86,13 @@ ENV PATH=/usr/local/anaconda/bin:$PATH
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
-
-RUN pip install nibabel==2.2.0
-RUN pip install pybids==0.3 grabbit==0.0.8
-RUN pip install duecredit==0.6.3
-RUN pip install scikit-learn==0.17.1
+RUN pip install \
+  nibabel==2.2.0 \
+  pybids==0.3 grabbit==0.0.8 \
+  duecredit==0.6.3 \
+  scikit-learn==0.17.1
 
 COPY . /code/
 RUN cd /code && ls && pip install -e .
-
-
 
 ENTRYPOINT ["run_brain_age_bids.py"]
