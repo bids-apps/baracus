@@ -89,7 +89,7 @@ jobs:
         - docker-v2-
         paths:
         - /tmp/cache/docker.tar.gz
-    - setup_remote_docker
+
     - run:
         name: Load Docker image layer cache
         no_output_timeout: 30m
@@ -128,7 +128,7 @@ jobs:
         key: docker-v2-{{ .Branch }}-{{ epoch }}
         paths:
         - /tmp/cache/docker.tar.gz
-      # Usage and version
+        # Usage and version
     - run:
         name: Usage BIDS
         command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME}:latest -h
@@ -170,7 +170,7 @@ jobs:
         - data-v3-{{ .Revision }}
         - data-v3-
 
-      # Load Docker
+        # Load Docker
     - run:
         name: Load Docker
         no_output_timeout: 30m
@@ -184,7 +184,7 @@ jobs:
         name: make output directory
         command: mkdir -p ${OUTDIR}
 
-      # Test 1: ds114_test1
+        # Test 1: ds114_test1
     - run:
         name: Test 1 ds114_test1 - 1
         command: |
@@ -208,8 +208,7 @@ jobs:
         command: |
           cat ${OUTDIR}/ds114_test1/baracus/00_group/group_predicted_age.tsv
 
-
-      # Test2 : models
+        # Test2 : models
     - run:
         name: Test 2 models - 1
         command: |
@@ -234,7 +233,7 @@ jobs:
         command: |
           cat ${OUTDIR}/ds114_test1_models/baracus/00_group/group_predicted_age.tsv
 
-      # Test3: file mode
+        # Test3: file mode
     - run:
         name: Test 3 file mode - 1
         command: |
@@ -254,8 +253,7 @@ jobs:
         command: |
           cat ${OUTDIR}/ds114_test1_file_mode/sub-01/sub-01_predicted_age.tsv
 
-
-      # Test 4: ds114_test2
+        # Test 4: ds114_test2
     - run:
         name: Test 1 ds114_test2 - 1
         command: |
@@ -279,7 +277,7 @@ jobs:
         command: |
           cat ${OUTDIR}/ds114_test2/baracus/00_group/group_predicted_age.tsv
 
-      # Test 5: skip_missing
+        # Test 5: skip_missing
     - run:
         name: Test 5 skip_missing - 1
         command: |
@@ -303,7 +301,6 @@ jobs:
         command: |
           cat ${OUTDIR}/ds114_test1_missing/baracus/00_group/group_predicted_age.tsv
 
-
     - store_artifacts:
         path: /tmp/outputs/
 
@@ -324,7 +321,7 @@ jobs:
         paths:
         - /tmp/cache/docker.tar.gz
 
-      # Load Docker
+        # Load Docker
     - run:
         name: Load Docker
         no_output_timeout: 30m
