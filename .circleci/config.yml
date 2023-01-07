@@ -351,6 +351,8 @@ workflows:
           tags:
             only: /.*/
     - deploy:
+        context:
+        - dockerhub
         requires:
         - test
         filters:
