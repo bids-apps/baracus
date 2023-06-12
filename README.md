@@ -15,7 +15,7 @@ least one T1w image.
 In a first step, BARACUS runs [FreeSurfer's](http://freesurfer.net)
 `recon-all` command and saves the output in `{out_dir}/freesurfer/`
 If the data has previously been analyzed with FreeSurfer version 5.3.0,
-and BARACUS finds them in `--freesurfer_dir` this step ist skippen.
+and BARACUS finds them in `--freesurfer_dir` this step is skipped.
 
 **Important:** if you use previously processed FreeSurfer data
 
