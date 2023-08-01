@@ -1,0 +1,53 @@
+---
+name: test latest image
+
+on:
+  push:
+    branches: ['*']
+  schedule:
+  - cron: 0 0 1 * *
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  test_dataset_without_session:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y tree
+
+    - name: pull docker image
+      run: docker pull bids/baracus
+
+    - name: get data
+      run: |
+        wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/utils/get_data_from_osf.sh
+        bash get_data_from_osf.sh ds114_test1
+        bash get_data_from_osf.sh ds114_test1_freesurfer
+
+    - name: help
+      run: |
+        docker run -t --rm bids/baracus --help
+        docker run -t --rm bids/baracus --version
+
+    - name: run
+      run: |
+        docker run --rm -ti \
+            -v ${HOME}/data/ds114_test1:/data/in \
+            -v ${HOME}/data/ds114_test1_freesurfer:/data/fs \
+            -v ${HOME}/data/ds114_test1:/data/out \
+              bids/baracus \
+                /data/in /data/out participant \
+                --freesurfer_dir /data/fs \
+                --license_key="~/test.key"
+
+    - name: check output
+      run: tree ${HOME}/data/ds114_test1
