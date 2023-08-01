@@ -40,7 +40,7 @@ jobs:
 
     - name: run
       run: |
-        docker run --rm -ti \
+        docker run --rm -t \
             -v ${HOME}/data/ds114_test1:/data/in \
             -v ${HOME}/data/ds114_test1_freesurfer:/data/fs \
             -v ${HOME}/data/ds114_test1:/data/out \
